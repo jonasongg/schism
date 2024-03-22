@@ -36,7 +36,7 @@ export function ChatList({ messages, selectedUser, sendMessage, isMobile }: Chat
                 layout: {
                   type: 'spring',
                   bounce: 0.3,
-                  duration: messages.indexOf(message) * 0.05 + 0.2,
+                  duration: Math.max(0, 10 - (messages.length - index)) * 0.05 + 0.2,
                 },
               }}
               style={{
@@ -56,7 +56,7 @@ export function ChatList({ messages, selectedUser, sendMessage, isMobile }: Chat
             >
               <span
                 className={cn(
-                  'p-3 rounded-md max-w-xs text-left',
+                  'py-2 px-2.5 rounded-md max-w-xs text-left',
                   message.name === selectedUser.name ? 'bg-accent' : 'bg-gray-300',
                 )}
               >
