@@ -58,31 +58,9 @@ export function ChatList({
                 message.name !== selectedUser.name ? "items-end" : "items-start"
               )}
             >
-              <div className="flex gap-3 items-center">
-                {message.name === selectedUser.name && (
-                  <Avatar className="flex justify-center items-center">
-                    <AvatarImage
-                      src={message.avatar}
-                      alt={message.name}
-                      width={6}
-                      height={6}
-                    />
-                  </Avatar>
-                )}
-                <span className=" bg-accent p-3 rounded-md max-w-xs text-left">
-                  {message.message}
-                </span>
-                {message.name !== selectedUser.name && (
-                  <Avatar className="flex justify-center items-center">
-                    <AvatarImage
-                      src={message.avatar}
-                      alt={message.name}
-                      width={6}
-                      height={6}
-                    />
-                  </Avatar>
-                )}
-              </div>
+              <span className=" bg-accent p-3 rounded-md max-w-xs text-left">
+                {message.message}
+              </span>
             </motion.div>
           ))}
         </AnimatePresence>
