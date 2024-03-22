@@ -56,7 +56,7 @@ export function ChatList({ selectedUser, sendMessage, isMobile }: ChatListProps)
             >
               <span
                 className={cn(
-                  'py-2 px-2.5 rounded-2xl max-w-xs text-left',
+                  'py-2 px-2.5 rounded-2xl max-w-xs',
                   message.name === selectedUser.name ? 'bg-accent rounded-bl-none' : 'bg-gray-300 rounded-br-none',
                   message.name !== selectedUser.name && index !== 0 && message.name === messages[index - 1].name
                     ? 'rounded-tr-none'
