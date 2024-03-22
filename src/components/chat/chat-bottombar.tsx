@@ -1,4 +1,4 @@
-import { FileImage, Mic, Paperclip, PlusCircle, SendHorizontal, ThumbsUp } from 'lucide-react';
+import { FileImage, Paperclip, SendHorizontal, ThumbsUp } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { buttonVariants } from '../ui/button';
 import { cn } from '@/lib/utils';
@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Message, loggedInUserData } from '@/app/data';
 import { Textarea } from '../ui/textarea';
 import { EmojiPicker } from '../emoji-picker';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 interface ChatBottombarProps {
   sendMessage: (newMessage: Message) => void;
@@ -15,7 +14,7 @@ interface ChatBottombarProps {
 
 export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
 
-export default function ChatBottombar({ sendMessage, isMobile }: ChatBottombarProps) {
+export default function ChatBottombar({ sendMessage }: ChatBottombarProps) {
   const [message, setMessage] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -65,80 +64,6 @@ export default function ChatBottombar({ sendMessage, isMobile }: ChatBottombarPr
 
   return (
     <div className="p-2 flex justify-between w-full items-center gap-2">
-      <div className="flex">
-        <Popover>
-          <PopoverTrigger asChild>
-            <a
-              href="#"
-              className={cn(
-                buttonVariants({ variant: 'ghost', size: 'icon' }),
-                'h-9 w-9',
-                'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white',
-              )}
-            >
-              <PlusCircle size={20} className="text-muted-foreground" />
-            </a>
-          </PopoverTrigger>
-          <PopoverContent side="top" className="w-full p-2">
-            {message.trim() || isMobile ? (
-              <div className="flex gap-2">
-                <a
-                  href="#"
-                  className={cn(
-                    buttonVariants({ variant: 'ghost', size: 'icon' }),
-                    'h-9 w-9',
-                    'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white',
-                  )}
-                >
-                  <Mic size={20} className="text-muted-foreground" />
-                </a>
-                {BottombarIcons.map((icon, index) => (
-                  <a
-                    key={index}
-                    href="#"
-                    className={cn(
-                      buttonVariants({ variant: 'ghost', size: 'icon' }),
-                      'h-9 w-9',
-                      'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white',
-                    )}
-                  >
-                    <icon.icon size={20} className="text-muted-foreground" />
-                  </a>
-                ))}
-              </div>
-            ) : (
-              <a
-                href="#"
-                className={cn(
-                  buttonVariants({ variant: 'ghost', size: 'icon' }),
-                  'h-9 w-9',
-                  'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white',
-                )}
-              >
-                <Mic size={20} className="text-muted-foreground" />
-              </a>
-            )}
-          </PopoverContent>
-        </Popover>
-        {!message.trim() && !isMobile && (
-          <div className="flex">
-            {BottombarIcons.map((icon, index) => (
-              <a
-                key={index}
-                href="#"
-                className={cn(
-                  buttonVariants({ variant: 'ghost', size: 'icon' }),
-                  'h-9 w-9',
-                  'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white',
-                )}
-              >
-                <icon.icon size={20} className="text-muted-foreground" />
-              </a>
-            ))}
-          </div>
-        )}
-      </div>
-
       <AnimatePresence initial={false}>
         <motion.div
           key="input"
