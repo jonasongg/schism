@@ -1,4 +1,4 @@
-export const userData = [
+export const userData: UserData[] = [
   {
     id: 1,
     avatar: '/User1.png',
@@ -83,7 +83,12 @@ export const userData = [
   },
 ];
 
-export type UserData = (typeof userData)[number];
+export type UserData = {
+  id: number;
+  avatar: string;
+  messages?: Message[];
+  name: string;
+};
 
 export const loggedInUserData = {
   id: 5,

@@ -5,13 +5,13 @@ import ChatBottombar from './chat-bottombar';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface ChatListProps {
-  messages?: Message[];
   selectedUser: UserData;
   sendMessage: (newMessage: Message) => void;
   isMobile: boolean;
 }
 
-export function ChatList({ messages, selectedUser, sendMessage, isMobile }: ChatListProps) {
+export function ChatList({ selectedUser, sendMessage, isMobile }: ChatListProps) {
+  const { messages } = selectedUser;
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
