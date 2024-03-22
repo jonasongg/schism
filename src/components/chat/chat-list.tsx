@@ -1,8 +1,8 @@
-import { Message, UserData } from "@/app/data";
-import { cn } from "@/lib/utils";
-import React, { useRef } from "react";
-import ChatBottombar from "./chat-bottombar";
-import { AnimatePresence, motion } from "framer-motion";
+import { Message, UserData } from '@/app/data';
+import { cn } from '@/lib/utils';
+import React, { useRef } from 'react';
+import ChatBottombar from './chat-bottombar';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface ChatListProps {
   messages?: Message[];
@@ -11,27 +11,18 @@ interface ChatListProps {
   isMobile: boolean;
 }
 
-export function ChatList({
-  messages,
-  selectedUser,
-  sendMessage,
-  isMobile
-}: ChatListProps) {
+export function ChatList({ messages, selectedUser, sendMessage, isMobile }: ChatListProps) {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
   return (
     <div className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col">
-      <div
-        ref={messagesContainerRef}
-        className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col"
-      >
+      <div ref={messagesContainerRef} className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col">
         <AnimatePresence>
           {messages?.map((message, index) => (
             <motion.div
@@ -43,7 +34,7 @@ export function ChatList({
               transition={{
                 opacity: { duration: 0.1 },
                 layout: {
-                  type: "spring",
+                  type: 'spring',
                   bounce: 0.3,
                   duration: messages.indexOf(message) * 0.05 + 0.2,
                 },
@@ -53,18 +44,29 @@ export function ChatList({
                 originY: 0.5,
               }}
               className={cn(
-                "flex flex-col gap-2 p-4 whitespace-pre-wrap",
-                message.name !== selectedUser.name ? "items-end" : "items-start"
+                'flex flex-col gap-2 whitespace-pre-wrap px-4',
+                message.name !== selectedUser.name ? 'items-end' : 'items-start',
+
+                // if this message is not from the same user as the previous one, add padding-top
+                index === 0 || message.name !== messages[index - 1].name ? 'pt-4' : 'pt-0.5',
+
+                // if this message is not from the same user as the next one, add padding-bottom
+                index === messages.length - 1 || message.name !== messages[index + 1].name ? 'pb-4' : 'pb-0.5',
               )}
             >
-              <span className=" bg-accent p-3 rounded-md max-w-xs text-left">
+              <span
+                className={cn(
+                  'p-3 rounded-md max-w-xs text-left',
+                  message.name === selectedUser.name ? 'bg-accent' : 'bg-gray-300',
+                )}
+              >
                 {message.message}
               </span>
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
-      <ChatBottombar sendMessage={sendMessage} isMobile={isMobile}/>
+      <ChatBottombar sendMessage={sendMessage} isMobile={isMobile} />
     </div>
   );
 }
