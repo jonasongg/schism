@@ -15,10 +15,10 @@ interface SidebarProps {
   } & UserData)[];
   onClick?: () => void;
   isMobile: boolean;
-  setSelectedUser: React.Dispatch<React.SetStateAction<UserData>>;
+  setSelectedUserId: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export function Sidebar({ links, isCollapsed, setSelectedUser }: SidebarProps) {
+export function Sidebar({ links, isCollapsed, setSelectedUserId }: SidebarProps) {
   return (
     <div
       data-collapsed={isCollapsed}
@@ -67,7 +67,7 @@ export function Sidebar({ links, isCollapsed, setSelectedUser }: SidebarProps) {
                   'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white shrink',
                 'justify-start gap-4',
               )}
-              onClick={() => setSelectedUser(link)}
+              onClick={() => setSelectedUserId(link.id)}
             >
               <Avatar className="flex justify-center items-center">
                 <AvatarImage src={link.avatar} alt={link.avatar} width={6} height={6} className="w-10 h-10 " />

@@ -4,13 +4,20 @@ import { ChatList } from './chat-list';
 import React from 'react';
 
 interface ChatProps {
-  selectedUser: UserData;
+  userData: UserData[];
+  setUserData: React.Dispatch<React.SetStateAction<UserData[]>>;
+  selectedUserId: number;
   isMobile: boolean;
 }
 
-export function Chat({ selectedUser, isMobile }: ChatProps) {
+export function Chat({ userData, setUserData, selectedUserId, isMobile }: ChatProps) {
+  const selectedUser = userData.find((user) => user.id === selectedUserId) ?? userData[0];
   const sendMessage = (newMessage: Message) => {
-    // setSelectedUser({ ...selectedUser, messages: [...(selectedUser.messages ?? []), newMessage] });
+    setUserData(
+      userData.map((user) =>
+        user.id === selectedUserId ? { ...user, messages: [...(user.messages ?? []), newMessage] } : user,
+      ),
+    );
   };
 
   return (
