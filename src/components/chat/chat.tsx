@@ -7,10 +7,9 @@ interface ChatProps {
   userData: UserData[];
   setUserData: React.Dispatch<React.SetStateAction<UserData[]>>;
   selectedUserId: number;
-  isMobile: boolean;
 }
 
-export function Chat({ userData, setUserData, selectedUserId, isMobile }: ChatProps) {
+export function Chat({ userData, setUserData, selectedUserId }: ChatProps) {
   const selectedUser = userData.find((user) => user.id === selectedUserId) ?? userData[0];
   const sendMessage = (newMessage: Message) => {
     setUserData(
@@ -24,7 +23,7 @@ export function Chat({ userData, setUserData, selectedUserId, isMobile }: ChatPr
     <div className="flex flex-col justify-between w-full h-full">
       <ChatTopbar selectedUser={selectedUser} />
 
-      <ChatList selectedUser={selectedUser} sendMessage={sendMessage} isMobile={isMobile} />
+      <ChatList selectedUser={selectedUser} sendMessage={sendMessage} />
     </div>
   );
 }

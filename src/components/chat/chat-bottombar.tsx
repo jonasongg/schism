@@ -9,7 +9,6 @@ import { EmojiPicker } from '../emoji-picker';
 
 interface ChatBottombarProps {
   sendMessage: (newMessage: Message) => void;
-  isMobile: boolean;
 }
 
 export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
