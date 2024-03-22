@@ -48,16 +48,22 @@ export function ChatList({ messages, selectedUser, sendMessage, isMobile }: Chat
                 message.name !== selectedUser.name ? 'items-end' : 'items-start',
 
                 // if this message is not from the same user as the previous one, add padding-top
-                index === 0 || message.name !== messages[index - 1].name ? 'pt-4' : 'pt-0.5',
+                index === 0 || message.name !== messages[index - 1].name ? 'pt-3' : 'pt-0.5',
 
                 // if this message is not from the same user as the next one, add padding-bottom
-                index === messages.length - 1 || message.name !== messages[index + 1].name ? 'pb-4' : 'pb-0.5',
+                index === messages.length - 1 || message.name !== messages[index + 1].name ? 'pb-3' : 'pb-0.5',
               )}
             >
               <span
                 className={cn(
-                  'py-2 px-2.5 rounded-md max-w-xs text-left',
-                  message.name === selectedUser.name ? 'bg-accent' : 'bg-gray-300',
+                  'py-2 px-2.5 rounded-2xl max-w-xs text-left',
+                  message.name === selectedUser.name ? 'bg-accent rounded-bl-none' : 'bg-gray-300 rounded-br-none',
+                  message.name !== selectedUser.name && index !== 0 && message.name === messages[index - 1].name
+                    ? 'rounded-tr-none'
+                    : '',
+                  message.name === selectedUser.name && index !== 0 && message.name === messages[index - 1].name
+                    ? 'rounded-tl-none'
+                    : '',
                 )}
               >
                 {message.message}
