@@ -2,6 +2,7 @@ export const userData: UserData[] = [
   {
     id: 1,
     avatar: '/User1.png',
+    color: 'bg-slate-300',
     messages: [
       {
         id: 0,
@@ -59,15 +60,18 @@ export const userData: UserData[] = [
   {
     id: 2,
     avatar: '/User2.png',
+    color: 'bg-teal-300',
     name: 'John Doe',
   },
   {
     id: 3,
     avatar: '/User3.png',
+    color: 'bg-orange-200',
     name: 'Elizabeth Smith',
   },
   {
     id: 4,
+    color: 'bg-stone-400',
     avatar: '/User4.png',
     name: 'John Smith',
   },
@@ -76,6 +80,7 @@ export const userData: UserData[] = [
 export type UserData = {
   id: number;
   avatar: string;
+  color: string;
   messages?: Message[];
   name: string;
 };

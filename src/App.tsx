@@ -43,9 +43,8 @@ function App() {
 
   const getRandomUser = () => random(1, userData.length + 1);
 
-  const cancel = useRandomInterval(() => receiveMessage(getRandomUser(), 'test'), 100, 200);
-
-  if (gameOver) cancel();
+  // const cancel = useRandomInterval(() => receiveMessage(getRandomUser(), 'test'), 100, 200);
+  // if (gameOver) cancel();
 
   return (
     <main className="flex h-[calc(100dvh)] flex-col items-center justify-center p-4 md:px-24 py-32 gap-4">
