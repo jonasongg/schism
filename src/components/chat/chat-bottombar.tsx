@@ -97,6 +97,7 @@ export default function ChatBottombar({ sendMessage, gameOver }: ChatBottombarPr
                   inputRef.current.focus();
                 }
               }}
+              disabled={gameOver}
             />
           </div>
         </motion.div>
@@ -114,17 +115,17 @@ export default function ChatBottombar({ sendMessage, gameOver }: ChatBottombarPr
             <SendHorizontal size={20} className="text-muted-foreground" />
           </a>
         ) : (
-          <a
-            href="#"
+          <button
             className={cn(
               buttonVariants({ variant: 'ghost', size: 'icon' }),
               'h-9 w-9',
               'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white shrink-0',
             )}
             onClick={handleThumbsUp}
+            disabled={gameOver}
           >
             <ThumbsUp size={20} className="text-muted-foreground" />
-          </a>
+          </button>
         )}
       </AnimatePresence>
     </div>
