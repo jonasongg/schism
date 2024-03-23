@@ -25,7 +25,6 @@ export default function ChatBottombar({ sendMessage }: ChatBottombarProps) {
     const newMessage: Message = {
       id: message.length + 1,
       name: loggedInUserData.name,
-      avatar: loggedInUserData.avatar,
       message: '👍',
     };
     sendMessage(newMessage);
@@ -37,7 +36,6 @@ export default function ChatBottombar({ sendMessage }: ChatBottombarProps) {
       const newMessage: Message = {
         id: message.length + 1,
         name: loggedInUserData.name,
-        avatar: loggedInUserData.avatar,
         message: message.trim(),
       };
       sendMessage(newMessage);
