@@ -2,18 +2,19 @@ import { Message, UserData } from '@/app/data';
 import ChatTopbar from './chat-topbar';
 import { ChatList } from './chat-list';
 import React from 'react';
+import { Alert } from './chat-layout';
 
 interface ChatProps {
   userData: UserData[];
   setUserData: React.Dispatch<React.SetStateAction<UserData[]>>;
   selectedUserId: number;
-  setAlertingUsers: React.Dispatch<React.SetStateAction<number[]>>;
+  setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
 }
 
-export function Chat({ userData, setUserData, selectedUserId, setAlertingUsers }: ChatProps) {
+export function Chat({ userData, setUserData, selectedUserId, setAlerts }: ChatProps) {
   const selectedUser = userData.find((user) => user.id === selectedUserId) ?? userData[0];
   const sendMessage = (newMessage: Message) => {
-    setAlertingUsers((prev) => prev.filter((id) => id !== selectedUserId));
+    setAlerts((prev) => prev.filter((alert) => alert.userId !== selectedUserId));
     setUserData(
       userData.map((user) =>
         user.id === selectedUserId ? { ...user, messages: [...(user.messages ?? []), newMessage] } : user,
