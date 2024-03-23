@@ -37,7 +37,7 @@ export function Sidebar({ links, setSelectedUserId, alerts, setAlerts, setGameOv
               link.variant === 'ghost' && 'hover:bg-gray-500/5',
               link.variant === 'secondary' &&
                 'bg-gray-500/10 hover:bg-gray-400/10 dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white shrink',
-              'relative justify-start gap-4',
+              'relative justify-start gap-4 px-3.5',
             )}
             onClick={() => {
               setSelectedUserId(link.id);
