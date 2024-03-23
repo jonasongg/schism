@@ -7,7 +7,12 @@ import { Chat } from './chat';
 
 export function ChatLayout() {
   const [userData, setUserData] = React.useState(userDataJson);
-  const [selectedUserId, setSelectedUserId] = React.useState(0);
+  const [selectedUserId, setSelectedUserId] = React.useState(2);
+  const [alertingUsers, setAlertingUsers] = React.useState<number[]>([]);
+  const [gameOver, setGameOver] = React.useState(false);
+  if (gameOver) {
+    console.log('Game Over!');
+  }
 
   return (
     <>
@@ -18,8 +23,16 @@ export function ChatLayout() {
           variant: selectedUserId === user.id ? 'secondary' : 'ghost',
         }))}
         setSelectedUserId={setSelectedUserId}
+        alertingUsers={alertingUsers}
+        setAlertingUsers={setAlertingUsers}
+        setGameOver={setGameOver}
       />
-      <Chat userData={userData} setUserData={setUserData} selectedUserId={selectedUserId} />
+      <Chat
+        userData={userData}
+        setUserData={setUserData}
+        selectedUserId={selectedUserId}
+        setAlertingUsers={setAlertingUsers}
+      />
     </>
   );
 }
