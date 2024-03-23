@@ -12,6 +12,10 @@ export interface Alert {
 function App() {
   const [userData, setUserData] = useState(userDataJson);
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [gameOver, setGameOver] = useState(false);
+  if (gameOver) {
+    console.log('Game Over!');
+  }
 
   const receiveMessage = (userId: number, message: string) => {
     const name = userData.find((user) => user.id === userId)?.name;
@@ -39,13 +43,14 @@ function App() {
 
   const getRandomUser = () => random(1, userData.length + 1);
 
-  // receive message
-  // useRandomInterval(() => receiveMessage(getRandomUser(), 'test'), 100, 200);
+  const cancel = useRandomInterval(() => receiveMessage(getRandomUser(), 'test'), 100, 200);
+
+  if (gameOver) cancel();
 
   return (
     <main className="flex h-[calc(100dvh)] flex-col items-center justify-center p-4 md:px-24 py-32 gap-4">
       <div className="z-10 border rounded-lg max-w-5xl w-full h-full text-sm lg:flex">
-        <ChatLayout {...{ userData, setUserData, alerts, setAlerts }} />
+        <ChatLayout {...{ userData, setUserData, alerts, setAlerts, gameOver, setGameOver }} />
       </div>
     </main>
   );

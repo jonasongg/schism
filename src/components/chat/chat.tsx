@@ -9,9 +9,10 @@ interface ChatProps {
   setUserData: React.Dispatch<React.SetStateAction<UserData[]>>;
   selectedUserId: number;
   setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
+  gameOver: boolean;
 }
 
-export function Chat({ userData, setUserData, selectedUserId, setAlerts }: ChatProps) {
+export function Chat({ userData, setUserData, selectedUserId, setAlerts, gameOver }: ChatProps) {
   const selectedUser = userData.find((user) => user.id === selectedUserId) ?? userData[0];
   const sendMessage = (newMessage: Message) => {
     setAlerts((prev) => prev.filter((alert) => alert.userId !== selectedUserId));
@@ -26,7 +27,7 @@ export function Chat({ userData, setUserData, selectedUserId, setAlerts }: ChatP
     <div className="flex flex-col justify-between w-full h-full">
       <ChatTopbar selectedUser={selectedUser} />
 
-      <ChatList selectedUser={selectedUser} sendMessage={sendMessage} />
+      <ChatList selectedUser={selectedUser} sendMessage={sendMessage} gameOver={gameOver} />
     </div>
   );
 }

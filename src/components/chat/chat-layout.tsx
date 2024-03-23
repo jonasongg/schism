@@ -11,14 +11,12 @@ interface ChatLayoutProps {
   setUserData: React.Dispatch<React.SetStateAction<UserData[]>>;
   alerts: Alert[];
   setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
+  gameOver: boolean;
+  setGameOver: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function ChatLayout({ userData, setUserData, alerts, setAlerts }: ChatLayoutProps) {
+export function ChatLayout({ userData, setUserData, alerts, setAlerts, gameOver, setGameOver }: ChatLayoutProps) {
   const [selectedUserId, setSelectedUserId] = useState(2);
-  const [gameOver, setGameOver] = useState(false);
-  if (gameOver) {
-    console.log('Game Over!');
-  }
 
   return (
     <>
@@ -31,9 +29,16 @@ export function ChatLayout({ userData, setUserData, alerts, setAlerts }: ChatLay
         setSelectedUserId={setSelectedUserId}
         alerts={alerts}
         setAlerts={setAlerts}
+        gameOver={gameOver}
         setGameOver={setGameOver}
       />
-      <Chat userData={userData} setUserData={setUserData} selectedUserId={selectedUserId} setAlerts={setAlerts} />
+      <Chat
+        userData={userData}
+        setUserData={setUserData}
+        selectedUserId={selectedUserId}
+        setAlerts={setAlerts}
+        gameOver={gameOver}
+      />
     </>
   );
 }

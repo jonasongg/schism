@@ -7,9 +7,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 interface ChatListProps {
   selectedUser: UserData;
   sendMessage: (newMessage: Message) => void;
+  gameOver: boolean;
 }
 
-export function ChatList({ selectedUser, sendMessage }: ChatListProps) {
+export function ChatList({ selectedUser, sendMessage, gameOver }: ChatListProps) {
   const { messages } = selectedUser;
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -71,7 +72,7 @@ export function ChatList({ selectedUser, sendMessage }: ChatListProps) {
           ))}
         </AnimatePresence>
       </div>
-      <ChatBottombar sendMessage={sendMessage} />
+      <ChatBottombar sendMessage={sendMessage} gameOver={gameOver} />
     </div>
   );
 }

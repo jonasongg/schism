@@ -15,10 +15,11 @@ interface SidebarProps {
   setSelectedUserId: React.Dispatch<React.SetStateAction<number>>;
   alerts: Alert[];
   setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
+  gameOver: boolean;
   setGameOver: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function Sidebar({ links, setSelectedUserId, alerts, setAlerts, setGameOver }: SidebarProps) {
+export function Sidebar({ links, setSelectedUserId, alerts, setAlerts, gameOver, setGameOver }: SidebarProps) {
   return (
     <div className="relative group flex flex-col h-full gap-4 p-2 border-r">
       <div className="flex justify-between p-2 items-center">
@@ -48,7 +49,7 @@ export function Sidebar({ links, setSelectedUserId, alerts, setAlerts, setGameOv
           >
             {/* Animated red progress bar */}
             <AnimatePresence>
-              {alerts.find((alert) => alert.userId === link.id) && (
+              {!gameOver && alerts.find((alert) => alert.userId === link.id) && (
                 <motion.div
                   key={index}
                   className="absolute bg-red-400 inset-0 z-[-1] rounded-md w-0 opacity-0 "
@@ -56,7 +57,7 @@ export function Sidebar({ links, setSelectedUserId, alerts, setAlerts, setGameOv
                   animate={{ opacity: 1, width: '100%', transition: { duration: 8, ease: 'easeOut' } }}
                   exit={{ opacity: 0 }}
                   onAnimationComplete={(definition) => {
-                    if ((definition as TargetAndTransition).opacity) setGameOver(true);
+                    if ((definition as TargetAndTransition).opacity && !gameOver) setGameOver(true);
                   }}
                 />
               )}
@@ -65,8 +66,11 @@ export function Sidebar({ links, setSelectedUserId, alerts, setAlerts, setGameOv
             <Avatar className="flex justify-center items-center overflow-visible">
               {!!alerts.find((alert) => alert.userId === link.id)?.messagesUnread && (
                 <span
-                  className="bg-red-600 absolute w-5 h-5 -top-1 -left-1 rounded-full text-white leading-[1.2rem] z-0
-                    after:absolute after:bg-red-600 after:inset-0 after:rounded-full after:animate-ping after:z-[-1]"
+                  className={cn(
+                    'bg-red-600 absolute w-5 h-5 -top-1 -left-1 rounded-full text-white leading-[1.2rem] z-0',
+                    !gameOver &&
+                      'after:absolute after:bg-red-600 after:inset-0 after:rounded-full after:animate-ping after:z-[-1]',
+                  )}
                 >
                   {alerts.find((alert) => alert.userId === link.id)!.messagesUnread}
                 </span>

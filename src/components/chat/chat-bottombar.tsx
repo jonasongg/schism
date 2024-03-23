@@ -9,11 +9,12 @@ import { EmojiPicker } from '../emoji-picker';
 
 interface ChatBottombarProps {
   sendMessage: (newMessage: Message) => void;
+  gameOver: boolean;
 }
 
 export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
 
-export default function ChatBottombar({ sendMessage }: ChatBottombarProps) {
+export default function ChatBottombar({ sendMessage, gameOver }: ChatBottombarProps) {
   const [message, setMessage] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -86,6 +87,7 @@ export default function ChatBottombar({ sendMessage }: ChatBottombarProps) {
             name="message"
             placeholder="Aa"
             className=" w-full border rounded-full flex items-center h-10 resize-none overflow-hidden bg-background"
+            disabled={gameOver}
           ></Textarea>
           <div className="absolute right-2 bottom-1.5  ">
             <EmojiPicker
