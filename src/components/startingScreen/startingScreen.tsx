@@ -36,27 +36,29 @@ const StartingScreen = ({ setGameStatus, instructions, setInstructions }: Starti
                 <img src="public/schism.svg" alt="logo" width="400" ref={glitch.ref} />
               </div>
               <p className="text-lg text-center">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus commodi nesciunt autem, consequatur
-                ullam quibusdam corporis eius voluptates error nisi!
+                Welcome to Schism, a game about self-identity and navigating the chaotic world of messaging services.
+                <br /> <br />
+                In this simulator, you will experience a relentless influx of messages from various social circles, each
+                demanding your attention and response. Through gameplay, you will discover the profound impact of
+                messaging services on our sense of identity, highlighting the disconcerting reality of fragmented selves
+                in the digital age.
               </p>
-              <p className="text-lg text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-              {/* <div className="flex text-lg text-center items-center">
-                    <span>Lorem ipsum dolor sit amet.</span>
-                    <Button className="ml-4 text-base">Let's start.</Button>
-                  </div> */}
             </CardContent>
           </Card>
         </CarouselItem>
         <CarouselItem>
           <Card className="h-full p-16 flex items-center">
-            <CardContent className="flex items-center justify-center flex-col gap-6">
+            <CardContent className="flex items-center justify-center flex-col gap-10 pt-6">
               <div>
-                <img src="public/schism.svg" alt="logo" width="400" ref={glitch.ref} />
+                <iframe src="https://lottie.host/embed/d064e008-4524-4a53-96cd-ca64b52ac8d7/Bap9ef5Rwa.json"></iframe>
               </div>
               <p className="text-lg text-center">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi corporis odio officiis, perferendis
-                deleniti consectetur dolorum cumque ad hic similique repellendus nostrum natus cupiditate aspernatur!
-                Vel maxime vitae atque quia.
+                Today, technology has brought us closer together than ever before, yet it has also ushered in
+                unprecedented challenges to our sense of self. As you navigate the virtual landscape of this game, you
+                will confront the notion of self-fragmentation, and discover that the self has become more alien than
+                you ever realised. <br /> <br />
+                Are you prepared to unravel the layers of your digital existence and confront the unsettling truths
+                hidden within?
               </p>
             </CardContent>
           </Card>
@@ -65,7 +67,8 @@ const StartingScreen = ({ setGameStatus, instructions, setInstructions }: Starti
           <Card className="h-full p-16 flex items-center justify-center">
             <CardContent className="flex items-center justify-center flex-col gap-6">
               <p className="text-lg text-center">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Inventore, veniam?
+                Before we begin, have you played this game before? <br /> This will decide whether or not instructions
+                will be given to you as you play.
               </p>
               <RadioGroup onValueChange={(value) => (value === 'yes' ? setInstructions(false) : setInstructions(true))}>
                 <div className="flex items-center space-x-2">
