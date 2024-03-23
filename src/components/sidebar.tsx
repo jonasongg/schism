@@ -5,7 +5,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Message, UserData } from '@/app/data';
 import { AnimatePresence, TargetAndTransition, motion } from 'framer-motion';
-import { Alert } from './chat/chat-layout';
+import { Alert } from '@/App';
 
 interface SidebarProps {
   links: ({

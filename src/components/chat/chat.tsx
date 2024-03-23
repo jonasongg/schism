@@ -2,7 +2,7 @@ import { Message, UserData } from '@/app/data';
 import ChatTopbar from './chat-topbar';
 import { ChatList } from './chat-list';
 import React from 'react';
-import { Alert } from './chat-layout';
+import { Alert } from '@/App';
 
 interface ChatProps {
   userData: UserData[];
