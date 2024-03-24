@@ -4,19 +4,47 @@ import { useState } from 'react';
 import { Sidebar } from '../sidebar';
 import { Chat } from './chat';
 import { Alert } from '@/App';
-import { UserData } from '@/app/data';
+import { userData as userDataJson } from '@/app/data';
+import { random, useRandomInterval } from '@/lib/useRandomInterval';
 
-interface ChatLayoutProps {
-  userData: UserData[];
-  setUserData: React.Dispatch<React.SetStateAction<UserData[]>>;
-  alerts: Alert[];
-  setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
-  gameOver: boolean;
-  setGameOver: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export function ChatLayout({ userData, setUserData, alerts, setAlerts, gameOver, setGameOver }: ChatLayoutProps) {
+export function ChatLayout() {
+  const [userData, setUserData] = useState(userDataJson);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
   const [selectedUserId, setSelectedUserId] = useState(2);
+  const [gameOver, setGameOver] = useState(false);
+
+  if (gameOver) {
+    console.log('Game Over!');
+  }
+
+  const receiveMessage = (userId: number, message: string) => {
+    const name = userData.find((user) => user.id === userId)?.name;
+
+    setUserData(
+      userData.map((user) =>
+        user.id === userId
+          ? {
+              ...user,
+              messages: [...(user.messages ?? []), { id: user.messages?.length ?? 0, name: name ?? '', message }],
+            }
+          : user,
+      ),
+    );
+    setAlerts((prev) => {
+      const alert = prev.find((alert) => alert.userId === userId);
+      if (alert) {
+        return prev.map((alert) =>
+          alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + 1 } : alert,
+        );
+      }
+      return [...prev, { userId, messagesUnread: 1 }];
+    });
+  };
+
+  const getRandomUser = () => random(1, userData.length + 1);
+
+  const cancel = useRandomInterval(() => receiveMessage(getRandomUser(), 'test'), 100, 200);
+  if (gameOver) cancel();
 
   return (
     <>
