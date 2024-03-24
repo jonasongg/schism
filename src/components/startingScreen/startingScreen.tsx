@@ -78,9 +78,8 @@ const StartingScreen = ({ setGameStatus, instructions, setInstructions }: Starti
               </div>
               <p className="text-lg text-center">
                 Today, technology has brought us closer together than ever before, yet it has also ushered in
-                unprecedented challenges to our sense of self. As you navigate the virtual landscape of this game,
-                you'll confront the notion of self-fragmentation—and discover that the self has become more alien than
-                you ever realised. <br /> <br />
+                unprecedented challenges to our sense of self. As you navigate this game, you'll confront the notion of
+                self-fragmentation—and discover the self has become more alien than you've ever realised. <br /> <br />
                 Are you prepared to unravel the layers of your digital existence and confront the{' '}
                 <span ref={textGlitch.ref}>unsettling truths</span> hidden within?
               </p>
