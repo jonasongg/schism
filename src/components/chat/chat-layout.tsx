@@ -7,11 +7,12 @@ import { Alert } from '@/App';
 import { userData as userDataJson } from '@/app/data';
 import { random, useRandomInterval } from '@/lib/useRandomInterval';
 
-export function ChatLayout() {
+export function ChatLayout({ instructions }: { instructions: boolean | null }) {
   const [userData, setUserData] = useState(userDataJson);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [selectedUserId, setSelectedUserId] = useState(2);
   const [gameOver, setGameOver] = useState(false);
+  const [popUps, setPopUps] = useState<boolean[]>([false]);
 
   if (gameOver) {
     console.log('Game Over!');
@@ -43,7 +44,7 @@ export function ChatLayout() {
 
   const getRandomUser = () => random(1, userData.length + 1);
 
-  const cancel = useRandomInterval(() => receiveMessage(getRandomUser(), 'test'), 100, 200);
+  const cancel = useRandomInterval(() => receiveMessage(getRandomUser(), 'test'), 1000, 2000);
   if (gameOver) cancel();
 
   return (
@@ -59,6 +60,9 @@ export function ChatLayout() {
         setAlerts={setAlerts}
         gameOver={gameOver}
         setGameOver={setGameOver}
+        popUps={popUps}
+        setPopUps={setPopUps}
+        instructions={instructions}
       />
       <Chat
         userData={userData}

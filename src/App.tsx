@@ -46,7 +46,7 @@ function App() {
             transition={{ duration: 1.2 }}
             className="absolute z-10 border rounded-lg max-w-5xl w-full h-3/4 text-sm lg:flex"
           >
-            <ChatLayout />
+            <ChatLayout instructions={instructions} />
           </motion.div>
         )}
       </AnimatePresence>

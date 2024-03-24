@@ -6,6 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Message, UserData } from '@/app/data';
 import { AnimatePresence, TargetAndTransition, motion } from 'framer-motion';
 import { Alert } from '@/App';
+import { Card } from './ui/card';
 
 interface SidebarProps {
   links: ({
@@ -17,9 +18,22 @@ interface SidebarProps {
   setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
   gameOver: boolean;
   setGameOver: React.Dispatch<React.SetStateAction<boolean>>;
+  popUps: boolean[];
+  setPopUps: React.Dispatch<React.SetStateAction<boolean[]>>;
+  instructions: boolean | null;
 }
 
-export function Sidebar({ links, setSelectedUserId, alerts, setAlerts, gameOver, setGameOver }: SidebarProps) {
+export function Sidebar({
+  links,
+  setSelectedUserId,
+  alerts,
+  setAlerts,
+  gameOver,
+  setGameOver,
+  popUps,
+  setPopUps,
+  instructions,
+}: SidebarProps) {
   return (
     <div className="relative group flex flex-col h-full gap-4 p-2 border-r">
       <div className="flex justify-between p-2 items-center">
@@ -49,6 +63,31 @@ export function Sidebar({ links, setSelectedUserId, alerts, setAlerts, gameOver,
                 );
               }}
             >
+              {instructions && (
+                <AnimatePresence>
+                  {!popUps[0] && alerts.find((alert) => alert.userId === link.id) && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0, transition: { delay: 8 } }}
+                      onAnimationComplete={() =>
+                        setPopUps((prev) => {
+                          const newPopUps = [...prev];
+                          newPopUps[0] = true;
+                          return newPopUps;
+                        })
+                      }
+                      className="fixed -translate-x-[17rem] w-56 text-wrap font-normal"
+                    >
+                      <Card className="p-3">
+                        You received a message. Reply to it <strong>appropriately</strong> before the red bar reaches
+                        the end.
+                      </Card>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              )}
+
               {/* Animated red progress bar */}
               <AnimatePresence>
                 {!gameOver && alerts.find((alert) => alert.userId === link.id) && (
