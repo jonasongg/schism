@@ -6,6 +6,7 @@ import StartingScreen from './components/startingScreen/startingScreen';
 export interface Alert {
   userId: number;
   messagesUnread: number;
+  timeLimit: number;
 }
 
 export enum GameStatus {

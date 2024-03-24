@@ -35,10 +35,12 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
       const alert = prev.find((alert) => alert.userId === userId);
       if (alert) {
         return prev.map((alert) =>
-          alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + 1 } : alert,
+          alert.userId === userId
+            ? { ...alert, messagesUnread: alert.messagesUnread + 1, timeLimit: alert.timeLimit - 1 }
+            : alert,
         );
       }
-      return [...prev, { userId, messagesUnread: 1 }];
+      return [...prev, { userId, messagesUnread: 1, timeLimit: 8 }];
     });
   };
 

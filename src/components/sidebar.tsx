@@ -95,7 +95,14 @@ export function Sidebar({
                     key={index}
                     className="absolute bg-red-400 inset-0 z-[-1] rounded-md w-0 opacity-0 "
                     initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: '100%', transition: { duration: 8, ease: 'easeOut' } }}
+                    animate={{
+                      opacity: 1,
+                      width: '100%',
+                      transition: {
+                        duration: alerts.find((alert) => alert.userId === link.id)?.timeLimit,
+                        ease: 'easeOut',
+                      },
+                    }}
                     exit={{ opacity: 0 }}
                     onAnimationComplete={(definition) => {
                       if ((definition as TargetAndTransition).opacity && !gameOver) setGameOver(true);
@@ -106,9 +113,10 @@ export function Sidebar({
 
               <Avatar className="flex justify-center items-center overflow-visible">
                 {!!alerts.find((alert) => alert.userId === link.id)?.messagesUnread && (
+                  // Badge
                   <span
                     className={cn(
-                      'bg-red-600 absolute w-5 h-5 -top-1 -left-1 rounded-full text-white leading-[1.2rem] z-0',
+                      'bg-red-600 absolute w-5 h-5 -top-1 -left-1 rounded-full text-white z-0',
                       !gameOver &&
                         'after:absolute after:bg-red-600 after:inset-0 after:rounded-full after:animate-ping after:z-[-1]',
                     )}
