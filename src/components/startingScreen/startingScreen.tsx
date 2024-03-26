@@ -56,7 +56,7 @@ const StartingScreen = ({ setGameStatus, instructions, setInstructions }: Starti
           <Card className="h-full p-16 flex items-center">
             <CardContent className="flex items-center justify-center flex-col gap-6">
               <div>
-                <img src="public/schism.svg" alt="logo" width="400" ref={schismGlitch.ref} />
+                <img src="schism.svg" alt="logo" width="400" ref={schismGlitch.ref} />
               </div>
               <p className="text-lg text-center">
                 Welcome to <em>Schism</em>, a game about self-identity and navigating the chaotic world of messaging

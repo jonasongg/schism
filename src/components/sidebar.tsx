@@ -39,7 +39,7 @@ export function Sidebar({
       <div className="flex justify-between p-2 items-center">
         <div className="flex gap-2 items-center text-2xl">
           <p className="font-medium">Chats</p>
-          <span className="text-zinc-300">({links.length})</span>
+          <span className="text-zinc-300">({links.filter((link) => link.messages.length > 0).length})</span>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export function Sidebar({
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      exit={{ opacity: 0, transition: { delay: 8 } }}
+                      exit={{ opacity: 0, transition: { delay: 10 } }}
                       onAnimationComplete={() =>
                         setPopUps((prev) => {
                           const newPopUps = [...prev];
@@ -79,7 +79,7 @@ export function Sidebar({
                       }
                       className="fixed -translate-x-[17rem] w-56 text-wrap font-normal"
                     >
-                      <Card className="p-3">
+                      <Card className="p-3 cursor-default">
                         You received a message. Reply to it <strong>appropriately</strong> before the red bar reaches
                         the end.
                       </Card>

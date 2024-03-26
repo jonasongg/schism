@@ -16,7 +16,7 @@ export enum GameStatus {
 }
 
 function App() {
-  const [gameStatus, setGameStatus] = useState(GameStatus.STARTING_SCREEN);
+  const [gameStatus, setGameStatus] = useState(GameStatus.PLAYING);
   const [instructions, setInstructions] = useState<boolean | null>(null);
 
   return (
