@@ -6,6 +6,7 @@ import { Chat } from './chat';
 import { Alert } from '@/App';
 import { userData as userDataJson } from '@/app/data';
 import { random, useRandomInterval } from '@/lib/useRandomInterval';
+import { askChatGpt } from '@/lib/gpt';
 
 export function ChatLayout({ instructions }: { instructions: boolean | null }) {
   const [userData, setUserData] = useState(userDataJson);
@@ -28,17 +29,36 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
   // Assume max difficulty starts at 1 minutes
   const getScaling = (toScaleTo: number) => (startTime == null ? 0 : ((Date.now() - startTime) / 60000) * toScaleTo);
 
-  const getRandomUser = () => random(1, userData.length + 1);
+  const receiveMessage = async () => {
+    if (alerts.length >= userData.length) return;
 
-  const receiveMessage = (userId: number, message: string) => {
-    const name = userData.find((user) => user.id === userId)?.name ?? '';
+    const getUserId = (): number => {
+      const temp = random(1, userData.length + 1);
+      return alerts.find((alert) => alert.userId === temp) == null ? temp : getUserId();
+    };
+
+    const userId = getUserId();
+
+    const user = userData.find((user) => user.id === userId);
+    if (user == null) return;
+
+    const { name, messages } = user;
+    const responses = await askChatGpt(
+      userId,
+      messages?.map((m) =>
+        m.name === name ? { role: 'assistant', content: m.message } : { role: 'user', content: m.message },
+      ) ?? [],
+    );
 
     setUserData(
       userData.map((user) =>
         user.id === userId
           ? {
               ...user,
-              messages: [...(user.messages ?? []), { id: user.messages?.length ?? 0, name, message }],
+              messages: [
+                ...(user.messages ?? []),
+                ...responses.map((r) => ({ id: user.messages?.length ?? 0, name, message: r })),
+              ],
             }
           : user,
       ),
@@ -46,17 +66,23 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
     setAlerts((prev) =>
       prev.find((alert) => alert.userId === userId)
         ? prev.map((alert) =>
-            alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + 1 } : alert,
+            alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + responses.length } : alert,
           )
-        : [...prev, { userId, messagesUnread: 1, timeLimit: random(25 - getScaling(10), 35 - getScaling(15)) }],
+        : // 25 and 35
+          [
+            ...prev,
+            { userId, messagesUnread: responses.length, timeLimit: random(925 - getScaling(10), 935 - getScaling(15)) },
+          ],
     );
   };
 
-  const cancel = useRandomInterval(() => receiveMessage(getRandomUser(), 'test'), 8000, 15000, {
+  // 8000 and 15000
+  const cancel = useRandomInterval(() => receiveMessage(), 3000, 3000, {
     getScaling,
     minSubtract: 2000,
     maxSubtract: 5000,
   });
+  // cancel();
   if (gameOver) cancel();
 
   return (

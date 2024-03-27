@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Message, UserData } from '@/app/data';
-import { AnimatePresence, TargetAndTransition, motion } from 'framer-motion';
+import { AnimatePresence, TargetAndTransition, easeIn, easeOut, motion } from 'framer-motion';
 import { Alert } from '@/App';
 import { Card } from './ui/card';
 
@@ -56,6 +56,8 @@ export function Sidebar({
                   'bg-gray-500/10 hover:bg-gray-400/10 dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white shrink',
                 'relative justify-start gap-4 px-3.5',
               )}
+              // initial={{ width: '40px' }}
+              // animate={{ width: '100%', transition: { duration: 0.3, ease: easeIn } }}
               onClick={() => {
                 setSelectedUserId(link.id);
                 setAlerts((prev) =>
@@ -121,7 +123,7 @@ export function Sidebar({
                         'after:absolute after:bg-red-600 after:inset-0 after:rounded-full after:animate-ping after:z-[-1]',
                     )}
                   >
-                    {alerts.find((alert) => alert.userId === link.id)!.messagesUnread}
+                    {alerts.find((alert) => alert.userId === link.id)?.messagesUnread}
                   </span>
                 )}
                 <AvatarImage src={link.avatar} alt={link.avatar} width={6} height={6} className="w-10 h-10 " />
@@ -132,7 +134,7 @@ export function Sidebar({
               <div className="flex flex-col">
                 <span className="text-left">{link.name}</span>
                 {link.messages.length > 0 && (
-                  <span className="text-zinc-300 text-xs truncate w-48 text-left">
+                  <span className="text-zinc-300 text-xs w-48 truncate text-left">
                     {link.messages[link.messages.length - 1].name.split(' ')[0]}:{' '}
                     {link.messages[link.messages.length - 1].message}
                   </span>
