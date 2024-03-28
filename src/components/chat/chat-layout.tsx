@@ -50,34 +50,33 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
       ) ?? [],
     );
 
-    setUserData(
-      userData.map((user) =>
-        user.id === userId
-          ? {
-              ...user,
-              messages: [
-                ...(user.messages ?? []),
-                ...responses.map((r) => ({ id: user.messages?.length ?? 0, name, message: r })),
-              ],
-            }
-          : user,
-      ),
-    );
-    setAlerts((prev) =>
-      prev.find((alert) => alert.userId === userId)
-        ? prev.map((alert) =>
-            alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + responses.length } : alert,
-          )
-        : // 25 and 35
-          [
-            ...prev,
-            { userId, messagesUnread: responses.length, timeLimit: random(925 - getScaling(10), 935 - getScaling(15)) },
-          ],
-    );
+    for (const response of responses) {
+      setUserData(
+        userData.map((user) =>
+          user.id === userId
+            ? {
+                ...user,
+                messages: [...(user.messages ?? []), { id: user.messages?.length ?? 0, name, message: response }],
+              }
+            : user,
+        ),
+      );
+      setAlerts((prev) =>
+        prev.find((alert) => alert.userId === userId)
+          ? prev.map((alert) =>
+              alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + 1 } : alert,
+            )
+          : // 25 and 35
+            [...prev, { userId, messagesUnread: 1, timeLimit: random(925 - getScaling(10), 935 - getScaling(15)) }],
+      );
+
+      // maximum here should be smaller than minimum of receive message
+      await new Promise((resolve) => setTimeout(resolve, random(1500, 3000)));
+    }
   };
 
   // 8000 and 15000
-  const cancel = useRandomInterval(() => receiveMessage(), 3000, 3000, {
+  const cancel = useRandomInterval(() => receiveMessage(), 4000, 4000, {
     getScaling,
     minSubtract: 2000,
     maxSubtract: 5000,
