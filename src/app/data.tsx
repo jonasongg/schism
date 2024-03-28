@@ -28,22 +28,28 @@ export const userData: UserData[] = [
 export const initialMessages = Object.freeze([
   {
     userId: 1,
-    prompt: "i am your friend. i'm texting you to catch up.",
+    prompt:
+      "you am my friend. you're texting me to catch up. reply in an informal text-based way. avoid punctuation and capital letters,\
+      include typos, and keep your messages short.",
     initial: ['hey wyd', 'i have sth to tell you'],
   },
   {
     userId: 2,
-    prompt: "I am your manager. I'm texting you to question your recent behavior.",
+    prompt:
+      "You are my very strict manager. You're texting me to question me about my recent performance at work \
+      which has been disappointing of late. Reply in a professional manner and question me if I do not reply professionally.",
     initial: ['Hey You', 'Do you have a minute?'],
   },
   {
     userId: 3,
-    prompt: "i'm your best friend. i'm texting you to gossip.",
+    prompt:
+      "you're my best friend. you're texting me to gossip. reply in an informal text-based way. avoid punctuation and capital letters,\
+      include typos, and keep your messages short.",
     initial: ['omg', 'guess who i saw today'],
   },
   {
     userId: 4,
-    prompt: "i'm your coworker that you dislike. i'm texting you to ask about work.",
+    prompt: "You're my coworker that I dislike. You're texting me to ask about work.",
     initial: ['Hey', 'Can you help me with this?'],
   },
 ]);

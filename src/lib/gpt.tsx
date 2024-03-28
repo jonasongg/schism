@@ -7,8 +7,11 @@ const prompt =
   // Make it super casual, nonchalant, and natural. Include typos. Exclude punctuation and capital letters. \
   // Don't make the message too long; split it up into multiple messages if needed.";
 
-  'you are my friend. continue conversation in a very informal, text-based way. do not use punctuation. keep your messages short.\
-  the following messages will be labelled as "assistant" or "user" to indicate who is speaking. you are "assistant", and I am "user".';
+  "You are texting me. Continue conversation in a way that is appropriate for who you are.\
+  The next message will give you context on how you are related to me and how you should reply.\
+  The following messages will be labelled as 'assistant' or 'user' to indicate who is speaking. You are 'assistant', and I am 'user'.\
+  If my response seems nonsensical or inappropriate, call it out.\
+  Try not to let the conversation end.";
 
 // const initialMessages = Object.freeze([
 //   'hey, wyd',
@@ -46,17 +49,21 @@ export const askChatGpt = async (
   const openai = new OpenAI({ apiKey: import.meta.env.VITE_CHATGPT_TOKEN, dangerouslyAllowBrowser: true });
 
   const completion = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo-0125',
+    model: 'gpt-3.5-turbo',
     messages: [
       { role: 'system', content: prompt },
       ...(initialMessage != null ? [{ role: 'system', content: initialMessage?.prompt } as const] : []),
-      ...(initialMessage?.initial.map<ChatCompletionAssistantMessageParam>((message) => ({
-        role: 'assistant',
-        content: message,
-      })) ?? []),
+      // ...(initialMessage?.initial.map<ChatCompletionAssistantMessageParam>((message) => ({
+      //   role: 'assistant',
+      //   content: message,
+      // })) ?? []),
       ...messageHistory,
     ],
   });
 
-  return [completion.choices[0].message.content ?? ''];
+  return completion.choices[0].message.content == null
+    ? ['']
+    : userId === 1 || userId === 3
+      ? completion.choices[0].message.content.trim().split('.')
+      : [completion.choices[0].message.content];
 };

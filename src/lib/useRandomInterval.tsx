@@ -8,9 +8,10 @@ export const useRandomInterval = (
   minDelay: number,
   maxDelay: number,
   scaleOptions?: {
-    getScaling: (toScaleTo: number) => number;
+    getScaling: (toScaleTo: number, maxInSec: number) => number;
     minSubtract: number;
     maxSubtract: number;
+    maxInSec: number;
   },
 ) => {
   const timeoutId = React.useRef<number | undefined>(undefined);
@@ -21,8 +22,8 @@ export const useRandomInterval = (
   React.useEffect(() => {
     const handleTick = () => {
       const nextTickAt = random(
-        minDelay - (scaleOptions ? scaleOptions.getScaling(scaleOptions.minSubtract) : 0),
-        maxDelay - (scaleOptions ? scaleOptions.getScaling(scaleOptions.maxSubtract) : 0),
+        minDelay - (scaleOptions ? scaleOptions.getScaling(scaleOptions.minSubtract, scaleOptions.maxInSec) : 0),
+        maxDelay - (scaleOptions ? scaleOptions.getScaling(scaleOptions.maxSubtract, scaleOptions.maxInSec) : 0),
       );
       timeoutId.current = window.setTimeout(() => {
         savedCallback.current();

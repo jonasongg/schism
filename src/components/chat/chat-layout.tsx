@@ -26,18 +26,21 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
 
   // helper functions
 
-  // Assume max difficulty starts at 1 minutes
-  const getScaling = (toScaleTo: number) => (startTime == null ? 0 : ((Date.now() - startTime) / 60000) * toScaleTo);
+  // Assume max difficulty starts at 3 minutes
+  const getScaling = (toScaleTo: number, maxInSec: number) =>
+    startTime == null ? 0 : ((Date.now() - startTime) / (maxInSec * 1000)) * toScaleTo;
 
   const receiveMessage = async () => {
-    if (alerts.length >= userData.length) return;
+    const getUserId = (): number | null => {
+      const currentLimit = Math.ceil(getScaling(userData.length, 120));
+      if (alerts.length >= currentLimit) return null;
 
-    const getUserId = (): number => {
-      const temp = random(1, userData.length + 1);
+      const temp = random(1, currentLimit + 1);
       return alerts.find((alert) => alert.userId === temp) == null ? temp : getUserId();
     };
 
     const userId = getUserId();
+    if (userId == null) return;
 
     const user = userData.find((user) => user.id === userId);
     if (user == null) return;
@@ -51,8 +54,8 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
     );
 
     for (const response of responses) {
-      setUserData(
-        userData.map((user) =>
+      setUserData((prev) =>
+        prev.map((user) =>
           user.id === userId
             ? {
                 ...user,
@@ -67,7 +70,10 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
               alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + 1 } : alert,
             )
           : // 25 and 35
-            [...prev, { userId, messagesUnread: 1, timeLimit: random(925 - getScaling(10), 935 - getScaling(15)) }],
+            [
+              ...prev,
+              { userId, messagesUnread: 1, timeLimit: random(25 - getScaling(10, 180), 35 - getScaling(15, 180)) },
+            ],
       );
 
       // maximum here should be smaller than minimum of receive message
@@ -75,11 +81,12 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
     }
   };
 
-  // 8000 and 15000
-  const cancel = useRandomInterval(() => receiveMessage(), 4000, 4000, {
+  // 6000 and 12000
+  const cancel = useRandomInterval(() => receiveMessage(), 3000, 3000, {
     getScaling,
     minSubtract: 2000,
     maxSubtract: 5000,
+    maxInSec: 180,
   });
   // cancel();
   if (gameOver) cancel();
