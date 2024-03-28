@@ -11,7 +11,7 @@ import { askChatGpt } from '@/lib/gpt';
 export function ChatLayout({ instructions }: { instructions: boolean | null }) {
   const [userData, setUserData] = useState(userDataJson);
   const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [selectedUserId, setSelectedUserId] = useState(2);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [popUps, setPopUps] = useState<boolean[]>([false]);
   const [startTime, setStartTime] = useState<number | null>(null);
@@ -102,13 +102,17 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
         setPopUps={setPopUps}
         instructions={instructions}
       />
-      <Chat
-        userData={userData}
-        setUserData={setUserData}
-        selectedUserId={selectedUserId}
-        setAlerts={setAlerts}
-        gameOver={gameOver}
-      />
+      {selectedUserId != null ? (
+        <Chat
+          userData={userData}
+          setUserData={setUserData}
+          selectedUserId={selectedUserId}
+          setAlerts={setAlerts}
+          gameOver={gameOver}
+        />
+      ) : (
+        <span className="flex justify-center items-center w-full text-gray-500">No chat selected</span>
+      )}
     </>
   );
 }

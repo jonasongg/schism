@@ -1,10 +1,6 @@
 import { initialMessages } from '@/app/data';
 import { OpenAI } from 'openai';
-import {
-  ChatCompletionAssistantMessageParam,
-  ChatCompletionSystemMessageParam,
-  ChatCompletionUserMessageParam,
-} from 'openai/resources/index.mjs';
+import { ChatCompletionAssistantMessageParam, ChatCompletionUserMessageParam } from 'openai/resources/index.mjs';
 
 const prompt =
   // "You are my Gen-Z friend who just texted me yesterday. Continue a text conversation over Telegram with me. \
@@ -41,19 +37,23 @@ export const askChatGpt = async (
   userId: number,
   messageHistory: (ChatCompletionAssistantMessageParam | ChatCompletionUserMessageParam)[],
 ): Promise<string[]> => {
+  const initialMessage = initialMessages.find((message) => message.userId === userId);
+
   if (messageHistory.length === 0) {
-    return initialMessages.find((message) => message.userId === userId)?.initial ?? [''];
+    return initialMessage?.initial ?? [''];
   }
 
   const openai = new OpenAI({ apiKey: import.meta.env.VITE_CHATGPT_TOKEN, dangerouslyAllowBrowser: true });
+
   const completion = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-3.5-turbo-0125',
     messages: [
       { role: 'system', content: prompt },
-      ...(initialMessages
-        .find((message) => message.userId === userId)
-        ?.initial.map<ChatCompletionAssistantMessageParam>((message) => ({ role: 'assistant', content: message })) ??
-        []),
+      ...(initialMessage != null ? [{ role: 'system', content: initialMessage?.prompt } as const] : []),
+      ...(initialMessage?.initial.map<ChatCompletionAssistantMessageParam>((message) => ({
+        role: 'assistant',
+        content: message,
+      })) ?? []),
       ...messageHistory,
     ],
   });

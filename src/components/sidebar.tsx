@@ -13,7 +13,7 @@ interface SidebarProps {
     messages: Message[];
     variant: 'secondary' | 'ghost';
   } & UserData)[];
-  setSelectedUserId: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedUserId: React.Dispatch<React.SetStateAction<number | null>>;
   alerts: Alert[];
   setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
   gameOver: boolean;
@@ -135,7 +135,7 @@ export function Sidebar({
                 <span className="text-left">{link.name}</span>
                 {link.messages.length > 0 && (
                   <span className="text-zinc-300 text-xs w-48 truncate text-left">
-                    {link.messages[link.messages.length - 1].name.split(' ')[0]}:{' '}
+                    {/* {link.messages[link.messages.length - 1].name.split(' ')[0]}:{' '} */}
                     {link.messages[link.messages.length - 1].message}
                   </span>
                 )}

@@ -3,33 +3,48 @@ export const userData: UserData[] = [
     id: 1,
     avatar: '/User1.png',
     color: 'bg-slate-300',
-    messages: [],
-    name: 'Jane Doe',
+    name: 'The Friend',
   },
   {
     id: 2,
     avatar: '/User2.png',
     color: 'bg-teal-300',
-    name: 'John Doe',
+    name: 'The Manager',
   },
   {
     id: 3,
     avatar: '/User3.png',
     color: 'bg-orange-200',
-    name: 'Elizabeth Smith',
+    name: 'The Best Friend',
   },
   {
     id: 4,
     color: 'bg-stone-400',
     avatar: '/User4.png',
-    name: 'John Smith',
+    name: 'The Coworker',
   },
 ];
 
 export const initialMessages = Object.freeze([
   {
     userId: 1,
+    prompt: "i am your friend. i'm texting you to catch up.",
     initial: ['hey wyd', 'i have sth to tell you'],
+  },
+  {
+    userId: 2,
+    prompt: "I am your manager. I'm texting you to question your recent behavior.",
+    initial: ['Hey You', 'Do you have a minute?'],
+  },
+  {
+    userId: 3,
+    prompt: "i'm your best friend. i'm texting you to gossip.",
+    initial: ['omg', 'guess who i saw today'],
+  },
+  {
+    userId: 4,
+    prompt: "i'm your coworker that you dislike. i'm texting you to ask about work.",
+    initial: ['Hey', 'Can you help me with this?'],
   },
 ]);
 
