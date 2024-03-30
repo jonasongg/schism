@@ -4,9 +4,10 @@ import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Message, UserData } from '@/app/data';
-import { AnimatePresence, TargetAndTransition, easeIn, easeOut, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Alert } from '@/App';
 import { Card } from './ui/card';
+import ProgressBar from './progressBar';
 
 interface SidebarProps {
   links: ({
@@ -48,6 +49,7 @@ export function Sidebar({
           .filter((link) => link.messages.length > 0)
           .map((link, index) => {
             const alert = alerts.find((alert) => alert.userId === link.id);
+
             return (
               <motion.button
                 key={index}
@@ -91,49 +93,15 @@ export function Sidebar({
                   </AnimatePresence>
                 )}
 
-                {/* Animated red progress bar */}
-                <AnimatePresence>
-                  {!gameOver && alert && (
-                    <motion.div
-                      key={index}
-                      className="absolute bg-red-400 inset-0 z-[-1] rounded-md w-0 opacity-0 "
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{
-                        opacity: 1,
-                        width: '100%',
-                        transition: {
-                          duration: alert.timeLimit * 0.7,
-                          delay: alert.timeLimit * 0.3,
-                          ease: 'easeOut',
-                        },
-                      }}
-                      exit={{ opacity: 0 }}
-                      onAnimationComplete={(definition) => {
-                        if ((definition as TargetAndTransition).opacity && !gameOver) setGameOver(true);
-                      }}
-                    />
-                  )}
-                  {!popUps[1] && alert && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1, transition: { delay: alert.timeLimit * 0.3 } }}
-                      exit={{ opacity: 0, transition: { delay: 5 } }}
-                      onAnimationComplete={() =>
-                        setPopUps((prev) => {
-                          const newPopUps = [...prev];
-                          newPopUps[1] = true;
-                          return newPopUps;
-                        })
-                      }
-                      className="fixed -translate-x-[17rem] w-56 text-wrap font-normal"
-                    >
-                      <Card className="p-3 cursor-default">
-                        This red bar indicates the time you have to reply to this message. Once it runs out, it's{' '}
-                        <strong>game over</strong>!
-                      </Card>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {alert && (
+                  <ProgressBar
+                    gameOver={gameOver}
+                    setGameOver={setGameOver}
+                    popUps={popUps}
+                    setPopUps={setPopUps}
+                    timeLimit={alert.timeLimit}
+                  />
+                )}
 
                 <Avatar className="flex justify-center items-center overflow-visible">
                   {!!alert?.messagesUnread && (

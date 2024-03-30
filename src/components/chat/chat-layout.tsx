@@ -30,9 +30,11 @@ export function ChatLayout({
     setStartTime(Date.now());
   }, []);
 
-  if (gameOver) {
-    setGameStatus(GameStatus.GAME_OVER);
-  }
+  useEffect(() => {
+    if (gameOver) {
+      setGameStatus(GameStatus.GAME_OVER);
+    }
+  }, [gameOver]);
 
   // helper functions
 

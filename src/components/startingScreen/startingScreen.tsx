@@ -6,6 +6,7 @@ import { Card, CardContent } from '../ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '../ui/carousel';
 import { useGlitch } from 'react-powerglitch';
 import { GameStatus } from '@/App';
+import { useEffect } from 'react';
 
 interface StartingScreenProps {
   setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
@@ -45,9 +46,12 @@ const StartingScreen = ({ setGameStatus, instructions, setInstructions }: Starti
   });
 
   const controls = useAnimationControls();
-  if (instructions != null) {
-    controls.start({ y: -20 });
-  }
+
+  useEffect(() => {
+    if (instructions != null) {
+      controls.start({ y: -20 });
+    }
+  }, [instructions]);
 
   return (
     <Carousel className="w-4/5 h-full">
