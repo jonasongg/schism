@@ -22,9 +22,9 @@ export function ChatLayout({
   const [popUps, setPopUps] = useState<boolean[]>([false, false]);
   const [startTime, setStartTime] = useState<number | null>(null);
 
-  const ALERT_TIME_LIMITS = [20, 10, 35, 15, 180];
+  const ALERT_TIME_LIMITS = [2, 10, 3, 15, 180];
   const TIME_BETWEEN_MULITPLE_SENDS = [1500, 3000];
-  const TIMES_BETWEEN_MESSAGES = [9000, 2000, 12000, 4000, 180];
+  const TIMES_BETWEEN_MESSAGES = [900, 2000, 1200, 4000, 180];
 
   useEffect(() => {
     setStartTime(Date.now());
