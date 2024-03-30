@@ -17,7 +17,7 @@ export enum GameStatus {
 
 function App() {
   const [gameStatus, setGameStatus] = useState(GameStatus.PLAYING);
-  const [instructions, setInstructions] = useState<boolean | null>(null);
+  const [instructions, setInstructions] = useState<boolean | null>(true);
 
   return (
     <main className="flex h-[calc(100dvh)] flex-col items-center justify-center gap-4">
@@ -44,10 +44,28 @@ function App() {
             key={GameStatus.PLAYING}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.2 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 1, duration: 1.2 }}
             className="absolute z-10 border rounded-lg max-w-5xl w-full h-3/4 text-sm lg:flex"
           >
-            <ChatLayout instructions={instructions} />
+            <ChatLayout instructions={instructions} setGameStatus={setGameStatus} />
+          </motion.div>
+        )}
+
+        {gameStatus === GameStatus.GAME_OVER && (
+          <motion.div
+            key={GameStatus.STARTING_SCREEN}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 1.5, duration: 0.5 }}
+            className="flex justify-center p-24 overflow-x-hidden"
+          >
+            <StartingScreen
+              setGameStatus={setGameStatus}
+              instructions={instructions}
+              setInstructions={setInstructions}
+            />
           </motion.div>
         )}
       </AnimatePresence>

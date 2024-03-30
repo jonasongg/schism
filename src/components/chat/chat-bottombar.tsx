@@ -88,6 +88,8 @@ export default function ChatBottombar({ sendMessage, gameOver }: ChatBottombarPr
             placeholder="Aa"
             className=" w-full border rounded-full flex items-center h-10 resize-none overflow-hidden bg-background"
             disabled={gameOver}
+            autoFocus
+            onBlur={() => inputRef.current && inputRef.current.focus()}
           ></Textarea>
           <div className="absolute right-2 bottom-1.5  ">
             <EmojiPicker

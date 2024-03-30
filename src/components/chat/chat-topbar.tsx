@@ -12,7 +12,7 @@ export default function ChatTopbar({ selectedUser }: ChatTopbarProps) {
         <Avatar className="flex justify-center items-center">
           <AvatarImage src={selectedUser.avatar} alt={selectedUser.name} width={6} height={6} className="w-10 h-10 " />
           <AvatarFallback className="text-2xl border-solid border-black border-2 rounded-full w-full h-full">
-            {selectedUser.name.charAt(0)}
+            {selectedUser.name.charAt(4)}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">

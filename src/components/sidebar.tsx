@@ -46,102 +46,125 @@ export function Sidebar({
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2 overflow-y-auto overflow-x-hidden">
         {links
           .filter((link) => link.messages.length > 0)
-          .map((link, index) => (
-            <motion.button
-              key={index}
-              className={cn(
-                buttonVariants({ variant: link.variant, size: 'lg' }),
-                link.variant === 'ghost' && 'hover:bg-gray-500/5',
-                link.variant === 'secondary' &&
-                  'bg-gray-500/10 hover:bg-gray-400/10 dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white shrink',
-                'relative justify-start gap-4 px-3.5',
-              )}
-              // initial={{ width: '40px' }}
-              // animate={{ width: '100%', transition: { duration: 0.3, ease: easeIn } }}
-              onClick={() => {
-                setSelectedUserId(link.id);
-                setAlerts((prev) =>
-                  prev.map((alert) => (alert.userId === link.id ? { ...alert, messagesUnread: 0 } : alert)),
-                );
-              }}
-            >
-              {instructions && (
+          .map((link, index) => {
+            const alert = alerts.find((alert) => alert.userId === link.id);
+            return (
+              <motion.button
+                key={index}
+                className={cn(
+                  buttonVariants({ variant: link.variant, size: 'lg' }),
+                  link.variant === 'ghost' && 'hover:bg-gray-500/5',
+                  link.variant === 'secondary' &&
+                    'bg-gray-500/10 hover:bg-gray-400/10 dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white shrink',
+                  'relative justify-start gap-4 px-3.5',
+                )}
+                // initial={{ width: '40px' }}
+                // animate={{ width: '100%', transition: { duration: 0.3, ease: easeIn } }}
+                onClick={() => {
+                  setSelectedUserId(link.id);
+                  setAlerts((prev) =>
+                    prev.map((alert) => (alert.userId === link.id ? { ...alert, messagesUnread: 0 } : alert)),
+                  );
+                }}
+              >
+                {instructions && (
+                  <AnimatePresence>
+                    {!popUps[0] && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { delay: 5 } }}
+                        onAnimationComplete={() =>
+                          setPopUps((prev) => {
+                            const newPopUps = [...prev];
+                            newPopUps[0] = true;
+                            return newPopUps;
+                          })
+                        }
+                        className="fixed -translate-x-[17rem] w-56 text-wrap font-normal"
+                      >
+                        <Card className="p-3 cursor-default">
+                          You received a message. Reply to it <strong>appropriately</strong>.
+                        </Card>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
+
+                {/* Animated red progress bar */}
                 <AnimatePresence>
-                  {!popUps[0] && alerts.find((alert) => alert.userId === link.id) && (
+                  {!gameOver && alert && (
+                    <motion.div
+                      key={index}
+                      className="absolute bg-red-400 inset-0 z-[-1] rounded-md w-0 opacity-0 "
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{
+                        opacity: 1,
+                        width: '100%',
+                        transition: {
+                          duration: alert.timeLimit * 0.7,
+                          delay: alert.timeLimit * 0.3,
+                          ease: 'easeOut',
+                        },
+                      }}
+                      exit={{ opacity: 0 }}
+                      onAnimationComplete={(definition) => {
+                        if ((definition as TargetAndTransition).opacity && !gameOver) setGameOver(true);
+                      }}
+                    />
+                  )}
+                  {!popUps[1] && alert && (
                     <motion.div
                       initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0, transition: { delay: 10 } }}
+                      animate={{ opacity: 1, transition: { delay: alert.timeLimit * 0.3 } }}
+                      exit={{ opacity: 0, transition: { delay: 5 } }}
                       onAnimationComplete={() =>
                         setPopUps((prev) => {
                           const newPopUps = [...prev];
-                          newPopUps[0] = true;
+                          newPopUps[1] = true;
                           return newPopUps;
                         })
                       }
                       className="fixed -translate-x-[17rem] w-56 text-wrap font-normal"
                     >
                       <Card className="p-3 cursor-default">
-                        You received a message. Reply to it <strong>appropriately</strong> before the red bar reaches
-                        the end.
+                        This red bar indicates the time you have to reply to this message. Once it runs out, it's{' '}
+                        <strong>game over</strong>!
                       </Card>
                     </motion.div>
                   )}
                 </AnimatePresence>
-              )}
 
-              {/* Animated red progress bar */}
-              <AnimatePresence>
-                {!gameOver && alerts.find((alert) => alert.userId === link.id) && (
-                  <motion.div
-                    key={index}
-                    className="absolute bg-red-400 inset-0 z-[-1] rounded-md w-0 opacity-0 "
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{
-                      opacity: 1,
-                      width: '100%',
-                      transition: {
-                        duration: alerts.find((alert) => alert.userId === link.id)?.timeLimit,
-                        ease: 'easeOut',
-                      },
-                    }}
-                    exit={{ opacity: 0 }}
-                    onAnimationComplete={(definition) => {
-                      if ((definition as TargetAndTransition).opacity && !gameOver) setGameOver(true);
-                    }}
-                  />
-                )}
-              </AnimatePresence>
-
-              <Avatar className="flex justify-center items-center overflow-visible">
-                {!!alerts.find((alert) => alert.userId === link.id)?.messagesUnread && (
-                  // Badge
-                  <span
-                    className={cn(
-                      'bg-red-600 absolute w-5 h-5 -top-1 -left-1 rounded-full text-white z-0',
-                      !gameOver &&
-                        'after:absolute after:bg-red-600 after:inset-0 after:rounded-full after:animate-ping after:z-[-1]',
-                    )}
-                  >
-                    {alerts.find((alert) => alert.userId === link.id)?.messagesUnread}
-                  </span>
-                )}
-                <AvatarImage src={link.avatar} alt={link.avatar} width={6} height={6} className="w-10 h-10 " />
-                <AvatarFallback className="text-2xl border-solid border-black border-2">
-                  {link.name.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col">
-                <span className="text-left">{link.name}</span>
-                {link.messages.length > 0 && (
-                  <span className="text-zinc-300 text-xs w-48 truncate text-left">
-                    {/* {link.messages[link.messages.length - 1].name.split(' ')[0]}:{' '} */}
-                    {link.messages[link.messages.length - 1].message}
-                  </span>
-                )}
-              </div>
-            </motion.button>
-          ))}
+                <Avatar className="flex justify-center items-center overflow-visible">
+                  {!!alert?.messagesUnread && (
+                    // Badge
+                    <span
+                      className={cn(
+                        'bg-red-600 absolute w-5 h-5 -top-1 -left-1 rounded-full text-white z-0',
+                        !gameOver &&
+                          'after:absolute after:bg-red-600 after:inset-0 after:rounded-full after:animate-ping after:z-[-1]',
+                      )}
+                    >
+                      {alert?.messagesUnread}
+                    </span>
+                  )}
+                  <AvatarImage src={link.avatar} alt={link.avatar} width={6} height={6} className="w-10 h-10 " />
+                  <AvatarFallback className="text-2xl border-solid border-black border-2">
+                    {link.name.charAt(4)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                  <span className="text-left">{link.name}</span>
+                  {link.messages.length > 0 && (
+                    <span className="text-zinc-300 text-xs w-48 truncate text-left">
+                      {/* {link.messages[link.messages.length - 1].name.split(' ')[0]}:{' '} */}
+                      {link.messages[link.messages.length - 1].message}
+                    </span>
+                  )}
+                </div>
+              </motion.button>
+            );
+          })}
       </nav>
     </div>
   );

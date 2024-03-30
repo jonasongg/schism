@@ -10,31 +10,10 @@ const prompt =
   "You are texting me. Continue conversation in a way that is appropriate for who you are.\
   The next message will give you context on how you are related to me and how you should reply.\
   The following messages will be labelled as 'assistant' or 'user' to indicate who is speaking. You are 'assistant', and I am 'user'.\
-  If my response seems nonsensical or inappropriate, call it out.\
-  Try not to let the conversation end.";
-
-// const initialMessages = Object.freeze([
-//   'hey, wyd',
-//   'just chilling, you?',
-//   'same, lol',
-//   'what are you up to',
-//   'nothing much, just watching tv',
-//   'cool, what are you watching',
-//   'some show on netflix',
-//   'nice, which one',
-//   'the office',
-//   'classic',
-//   'yeah, lol',
-//   'what about you',
-//   'i am watching a movie',
-//   'which one',
-//   'inception',
-//   'nice, i love that movie',
-//   'yeah, it is really good',
-//   'i know right',
-//   'lol',
-//   'lol',
-// ]);
+  If my response seems nonsensical or inappropriate--for example, if my reply doesn't make sense for the context of who you are\
+  and the conversation--do not simply ignore it. Instead, question me about it.\
+  If the conversation seems to end abruptly, ask me a question to keep it going.\
+  If the conversation seems to end naturally, you can end it by sending this exact string of text: '<<end>>";
 
 export const askChatGpt = async (
   userId: number,
@@ -63,7 +42,10 @@ export const askChatGpt = async (
 
   return completion.choices[0].message.content == null
     ? ['']
-    : userId === 1 || userId === 3
-      ? completion.choices[0].message.content.trim().split('.')
+    : [1, 3, 6, 7].includes(userId)
+      ? completion.choices[0].message.content
+          .split('.')
+          .map((message) => message.trim())
+          .filter(Boolean)
       : [completion.choices[0].message.content];
 };

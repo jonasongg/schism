@@ -3,25 +3,35 @@
 import { useEffect, useState } from 'react';
 import { Sidebar } from '../sidebar';
 import { Chat } from './chat';
-import { Alert } from '@/App';
+import { Alert, GameStatus } from '@/App';
 import { userData as userDataJson } from '@/app/data';
 import { random, useRandomInterval } from '@/lib/useRandomInterval';
 import { askChatGpt } from '@/lib/gpt';
 
-export function ChatLayout({ instructions }: { instructions: boolean | null }) {
+export function ChatLayout({
+  instructions,
+  setGameStatus,
+}: {
+  instructions: boolean | null;
+  setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
+}) {
   const [userData, setUserData] = useState(userDataJson);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [gameOver, setGameOver] = useState(false);
-  const [popUps, setPopUps] = useState<boolean[]>([false]);
+  const [popUps, setPopUps] = useState<boolean[]>([false, false]);
   const [startTime, setStartTime] = useState<number | null>(null);
+
+  const ALERT_TIME_LIMITS = [20, 10, 35, 15, 180];
+  const TIME_BETWEEN_MULITPLE_SENDS = [1500, 3000];
+  const TIMES_BETWEEN_MESSAGES = [9000, 2000, 12000, 4000, 180];
 
   useEffect(() => {
     setStartTime(Date.now());
   }, []);
 
   if (gameOver) {
-    console.log('Game Over!');
+    setGameStatus(GameStatus.GAME_OVER);
   }
 
   // helper functions
@@ -32,7 +42,7 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
 
   const receiveMessage = async () => {
     const getUserId = (): number | null => {
-      const currentLimit = Math.ceil(getScaling(userData.length, 120));
+      const currentLimit = Math.ceil(getScaling(userData.length, 240));
       if (alerts.length >= currentLimit) return null;
 
       const temp = random(1, currentLimit + 1);
@@ -54,39 +64,48 @@ export function ChatLayout({ instructions }: { instructions: boolean | null }) {
     );
 
     for (const response of responses) {
-      setUserData((prev) =>
-        prev.map((user) =>
-          user.id === userId
-            ? {
-                ...user,
-                messages: [...(user.messages ?? []), { id: user.messages?.length ?? 0, name, message: response }],
-              }
-            : user,
-        ),
-      );
-      setAlerts((prev) =>
-        prev.find((alert) => alert.userId === userId)
-          ? prev.map((alert) =>
-              alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + 1 } : alert,
-            )
-          : // 25 and 35
-            [
-              ...prev,
-              { userId, messagesUnread: 1, timeLimit: random(25 - getScaling(10, 180), 35 - getScaling(15, 180)) },
-            ],
-      );
+      if (response !== '<<end>>') {
+        setUserData((prev) =>
+          prev.map((user) =>
+            user.id === userId
+              ? {
+                  ...user,
+                  messages: [...(user.messages ?? []), { id: user.messages?.length ?? 0, name, message: response }],
+                }
+              : user,
+          ),
+        );
+        setAlerts((prev) =>
+          prev.find((alert) => alert.userId === userId)
+            ? prev.map((alert) =>
+                alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + 1 } : alert,
+              )
+            : [
+                ...prev,
+                {
+                  userId,
+                  messagesUnread: 1,
+                  timeLimit: random(
+                    ALERT_TIME_LIMITS[0] - getScaling(ALERT_TIME_LIMITS[1], ALERT_TIME_LIMITS[4]),
+                    ALERT_TIME_LIMITS[2] - getScaling(ALERT_TIME_LIMITS[3], ALERT_TIME_LIMITS[4]),
+                  ),
+                },
+              ],
+        );
+      }
 
       // maximum here should be smaller than minimum of receive message
-      await new Promise((resolve) => setTimeout(resolve, random(1500, 3000)));
+      await new Promise((resolve) =>
+        setTimeout(resolve, random(TIME_BETWEEN_MULITPLE_SENDS[0], TIME_BETWEEN_MULITPLE_SENDS[1])),
+      );
     }
   };
 
-  // 6000 and 12000
-  const cancel = useRandomInterval(() => receiveMessage(), 3000, 3000, {
+  const cancel = useRandomInterval(() => receiveMessage(), TIMES_BETWEEN_MESSAGES[0], TIMES_BETWEEN_MESSAGES[2], {
     getScaling,
-    minSubtract: 2000,
-    maxSubtract: 5000,
-    maxInSec: 180,
+    minSubtract: TIMES_BETWEEN_MESSAGES[1],
+    maxSubtract: TIMES_BETWEEN_MESSAGES[3],
+    maxInSec: TIMES_BETWEEN_MESSAGES[4],
   });
   // cancel();
   if (gameOver) cancel();
