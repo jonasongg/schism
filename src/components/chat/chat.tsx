@@ -40,8 +40,8 @@ export function Chat({
   useEffect(() => {
     const controller = new AbortController();
     (async () => {
-      setIsAutoCorrecting(true);
       if (isNextAutocorrect && selectedUserId != null) {
+        setIsAutoCorrecting(true);
         const { messages, name } = userData.find((user) => user.id === selectedUserId) ?? {};
         const response = (
           await askChatGpt(

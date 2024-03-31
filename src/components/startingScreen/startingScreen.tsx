@@ -49,7 +49,7 @@ const StartingScreen = ({ setGameStatus, instructions, setInstructions }: Starti
 
   useEffect(() => {
     if (instructions != null) {
-      controls.start({ y: -20 });
+      controls.start({ y: -35 });
     }
   }, [instructions]);
 
@@ -94,6 +94,8 @@ const StartingScreen = ({ setGameStatus, instructions, setInstructions }: Starti
           <Card className="h-full flex items-center justify-center flex-col">
             <motion.div animate={controls} className="absolute w-full flex items-center flex-col gap-6">
               <p className="text-lg text-center">
+                Please do not refresh the page during gameplay. Doing so will restart the game.
+                <br /> <br />
                 Before we begin, have you played this game before? <br /> This will decide whether or not instructions
                 will be given to you as you play.
               </p>
@@ -115,7 +117,7 @@ const StartingScreen = ({ setGameStatus, instructions, setInstructions }: Starti
             {instructions != null && (
               <motion.button
                 initial={{ y: 70 }}
-                animate={{ y: 90 }}
+                animate={{ y: 105 }}
                 className={buttonVariants({ variant: 'default' })}
                 onClick={() => setGameStatus(GameStatus.PLAYING)}
               >
