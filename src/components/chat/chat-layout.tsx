@@ -25,7 +25,7 @@ export function ChatLayout({
   const ALERT_TIME_LIMITS = [20, 10, 35, 15, 180];
   const TIME_BETWEEN_MULITPLE_SENDS = [1500, 3000];
   const TIMES_BETWEEN_MESSAGES = [9000, 2000, 12000, 4000, 180];
-  const TIMES_BETWEEN_AUTOCORRECTS = [60_000, 90_000];
+  const TIMES_BETWEEN_AUTOCORRECTS = [120_000, 150_000];
 
   useEffect(() => {
     setStartTime(Date.now());
@@ -65,7 +65,7 @@ export function ChatLayout({
     );
 
     for (const response of responses) {
-      if (response !== '<<end>>') {
+      if (!response.includes('<<end>>')) {
         setUserData((prev) =>
           prev.map((user) =>
             user.id === userId
@@ -111,10 +111,7 @@ export function ChatLayout({
 
   const [isNextAutocorrect, setIsNextAutocorrect] = useState(false);
   const cancelRandomAutocorrect = useRandomInterval(
-    () => {
-      setIsNextAutocorrect(true);
-      console.log('setting next autocorrect');
-    },
+    () => setIsNextAutocorrect(true),
     TIMES_BETWEEN_AUTOCORRECTS[0],
     TIMES_BETWEEN_AUTOCORRECTS[1],
   );
