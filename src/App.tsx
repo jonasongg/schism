@@ -18,7 +18,7 @@ export enum GameStatus {
 }
 
 function App() {
-  const [gameStatus, setGameStatus] = useState(GameStatus.GAME_OVER);
+  const [gameStatus, setGameStatus] = useState(GameStatus.PLAYING);
   const [instructions, setInstructions] = useState<boolean | null>(null);
 
   const controls = useAnimationControls();

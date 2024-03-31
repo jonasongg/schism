@@ -22,9 +22,10 @@ export function ChatLayout({
   const [popUps, setPopUps] = useState<boolean[]>([false, false]);
   const [startTime, setStartTime] = useState<number | null>(null);
 
-  const ALERT_TIME_LIMITS = [2, 10, 3, 15, 180];
+  const ALERT_TIME_LIMITS = [20, 10, 35, 15, 180];
   const TIME_BETWEEN_MULITPLE_SENDS = [1500, 3000];
-  const TIMES_BETWEEN_MESSAGES = [900, 2000, 1200, 4000, 180];
+  const TIMES_BETWEEN_MESSAGES = [9000, 2000, 12000, 4000, 180];
+  const TIMES_BETWEEN_AUTOCORRECTS = [60_000, 90_000];
 
   useEffect(() => {
     setStartTime(Date.now());
@@ -35,8 +36,6 @@ export function ChatLayout({
       setGameStatus(GameStatus.GAME_OVER);
     }
   }, [gameOver]);
-
-  // helper functions
 
   // Assume max difficulty starts at 3 minutes
   const getScaling = (toScaleTo: number, maxInSec: number) =>
@@ -103,14 +102,27 @@ export function ChatLayout({
     }
   };
 
-  const cancel = useRandomInterval(() => receiveMessage(), TIMES_BETWEEN_MESSAGES[0], TIMES_BETWEEN_MESSAGES[2], {
+  const cancelMessages = useRandomInterval(receiveMessage, TIMES_BETWEEN_MESSAGES[0], TIMES_BETWEEN_MESSAGES[2], {
     getScaling,
     minSubtract: TIMES_BETWEEN_MESSAGES[1],
     maxSubtract: TIMES_BETWEEN_MESSAGES[3],
     maxInSec: TIMES_BETWEEN_MESSAGES[4],
   });
-  // cancel();
-  if (gameOver) cancel();
+
+  const [isNextAutocorrect, setIsNextAutocorrect] = useState(false);
+  const cancelRandomAutocorrect = useRandomInterval(
+    () => {
+      setIsNextAutocorrect(true);
+      console.log('setting next autocorrect');
+    },
+    TIMES_BETWEEN_AUTOCORRECTS[0],
+    TIMES_BETWEEN_AUTOCORRECTS[1],
+  );
+
+  if (gameOver) {
+    cancelMessages();
+    cancelRandomAutocorrect();
+  }
 
   return (
     <>
@@ -136,6 +148,8 @@ export function ChatLayout({
           selectedUserId={selectedUserId}
           setAlerts={setAlerts}
           gameOver={gameOver}
+          isNextAutocorrect={isNextAutocorrect}
+          setIsNextAutocorrect={setIsNextAutocorrect}
         />
       ) : (
         <span className="flex justify-center items-center w-full text-gray-500">No chat selected</span>

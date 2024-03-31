@@ -1,20 +1,30 @@
 import { FileImage, Paperclip, SendHorizontal, ThumbsUp } from 'lucide-react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { buttonVariants } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Message, loggedInUserData } from '@/app/data';
 import { Textarea } from '../ui/textarea';
 import { EmojiPicker } from '../emoji-picker';
+import { random } from '@/lib/useRandomInterval';
 
 interface ChatBottombarProps {
   sendMessage: (newMessage: Message) => void;
   gameOver: boolean;
+  autoCorrection: string;
+  setAutoCorrection: React.Dispatch<React.SetStateAction<string>>;
+  isAutoCorrecting: boolean;
 }
 
 export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
 
-export default function ChatBottombar({ sendMessage, gameOver }: ChatBottombarProps) {
+export default function ChatBottombar({
+  sendMessage,
+  gameOver,
+  autoCorrection,
+  setAutoCorrection,
+  isAutoCorrecting,
+}: ChatBottombarProps) {
   const [message, setMessage] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -32,19 +42,15 @@ export default function ChatBottombar({ sendMessage, gameOver }: ChatBottombarPr
     setMessage('');
   };
 
-  const handleSend = () => {
-    if (message.trim()) {
+  const handleSend = (imperativeMessage: string = message) => {
+    if (imperativeMessage.trim()) {
       const newMessage: Message = {
-        id: message.length + 1,
+        id: imperativeMessage.length + 1,
         name: loggedInUserData.name,
-        message: message.trim(),
+        message: imperativeMessage.trim(),
       };
       sendMessage(newMessage);
       setMessage('');
-
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
     }
   };
 
@@ -59,6 +65,19 @@ export default function ChatBottombar({ sendMessage, gameOver }: ChatBottombarPr
       setMessage((prev) => prev + '\n');
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      if (autoCorrection) {
+        for (const c of autoCorrection) {
+          setMessage((prev) => prev + c);
+          await new Promise((resolve) => setTimeout(resolve, random(50, 200)));
+        }
+        handleSend(autoCorrection);
+        setAutoCorrection('');
+      }
+    })();
+  }, [autoCorrection]);
 
   return (
     <div className="p-2 flex justify-between w-full items-center gap-2">
@@ -87,17 +106,17 @@ export default function ChatBottombar({ sendMessage, gameOver }: ChatBottombarPr
             name="message"
             placeholder="Aa"
             className=" w-full border rounded-full flex items-center h-10 resize-none overflow-hidden bg-background"
-            disabled={gameOver}
+            disabled={gameOver || isAutoCorrecting || !!autoCorrection}
             autoFocus
             onBlur={() => inputRef.current && inputRef.current.focus()}
-          ></Textarea>
+          />
           <div className="absolute right-2 bottom-1.5  ">
             <EmojiPicker
               onChange={(value) => {
                 setMessage(message + value);
-                if (inputRef.current) {
-                  inputRef.current.focus();
-                }
+                // if (inputRef.current) {
+                //   inputRef.current.focus();
+                // }
               }}
               disabled={gameOver}
             />
@@ -112,7 +131,7 @@ export default function ChatBottombar({ sendMessage, gameOver }: ChatBottombarPr
               'h-9 w-9',
               'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white shrink-0',
             )}
-            onClick={handleSend}
+            onClick={() => handleSend()}
           >
             <SendHorizontal size={20} className="text-muted-foreground" />
           </a>

@@ -8,9 +8,19 @@ interface ChatListProps {
   selectedUser: UserData;
   sendMessage: (newMessage: Message) => void;
   gameOver: boolean;
+  autoCorrection: string;
+  setAutoCorrection: React.Dispatch<React.SetStateAction<string>>;
+  isAutoCorrecting: boolean;
 }
 
-export function ChatList({ selectedUser, sendMessage, gameOver }: ChatListProps) {
+export function ChatList({
+  selectedUser,
+  sendMessage,
+  gameOver,
+  autoCorrection,
+  setAutoCorrection,
+  isAutoCorrecting,
+}: ChatListProps) {
   const { messages } = selectedUser;
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -74,7 +84,13 @@ export function ChatList({ selectedUser, sendMessage, gameOver }: ChatListProps)
           ))}
         </AnimatePresence>
       </div>
-      <ChatBottombar sendMessage={sendMessage} gameOver={gameOver} />
+      <ChatBottombar
+        sendMessage={sendMessage}
+        gameOver={gameOver}
+        autoCorrection={autoCorrection}
+        setAutoCorrection={setAutoCorrection}
+        isAutoCorrecting={isAutoCorrecting}
+      />
     </div>
   );
 }
