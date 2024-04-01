@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import React, { useRef } from 'react';
 import ChatBottombar from './chat-bottombar';
 import { AnimatePresence, motion } from 'framer-motion';
+import { GlitchHandle } from 'react-powerglitch';
 
 interface ChatListProps {
   selectedUser: UserData;
@@ -11,6 +12,7 @@ interface ChatListProps {
   autoCorrection: string;
   setAutoCorrection: React.Dispatch<React.SetStateAction<string>>;
   isAutoCorrecting: boolean;
+  glitch: GlitchHandle;
 }
 
 export function ChatList({
@@ -20,6 +22,7 @@ export function ChatList({
   autoCorrection,
   setAutoCorrection,
   isAutoCorrecting,
+  glitch,
 }: ChatListProps) {
   const { messages } = selectedUser;
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -90,6 +93,7 @@ export function ChatList({
         autoCorrection={autoCorrection}
         setAutoCorrection={setAutoCorrection}
         isAutoCorrecting={isAutoCorrecting}
+        glitch={glitch}
       />
     </div>
   );

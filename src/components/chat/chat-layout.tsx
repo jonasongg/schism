@@ -5,8 +5,9 @@ import { Sidebar } from '../sidebar';
 import { Chat } from './chat';
 import { Alert, GameStatus } from '@/App';
 import { userData as userDataJson } from '@/app/data';
-import { random, useRandomInterval } from '@/lib/useRandomInterval';
+import { getCurrentLimit, getScaling, random, useRandomInterval } from '@/lib/useRandomInterval';
 import { askChatGpt } from '@/lib/gpt';
+import ReactHowler from 'react-howler';
 
 export function ChatLayout({
   instructions,
@@ -21,11 +22,13 @@ export function ChatLayout({
   const [gameOver, setGameOver] = useState(false);
   const [popUps, setPopUps] = useState<boolean[]>([false, false]);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [isPing, setIsPing] = useState(false);
 
-  const ALERT_TIME_LIMITS = [20, 10, 35, 15, 180];
-  const TIME_BETWEEN_MULITPLE_SENDS = [1500, 3000];
-  const TIMES_BETWEEN_MESSAGES = [9000, 2000, 12000, 4000, 180];
-  const TIMES_BETWEEN_AUTOCORRECTS = [120_000, 150_000];
+  const ALERT_TIME_LIMITS = [30, 10, 35, 15, 180];
+  const TIME_BETWEEN_MULITPLE_SENDS = [1000, 2000];
+  const TIMES_BETWEEN_MESSAGES = [8000, 3000, 11000, 4000, 180];
+  const TIMES_BETWEEN_AUTOCORRECTS = [150_000, 180_000];
+  const SCALING_WITH_NUMBER_OF_CHATS = [1.5, 2];
 
   useEffect(() => {
     setStartTime(Date.now());
@@ -37,18 +40,14 @@ export function ChatLayout({
     }
   }, [gameOver]);
 
-  // Assume max difficulty starts at 3 minutes
-  const getScaling = (toScaleTo: number, maxInSec: number) =>
-    startTime == null ? 0 : ((Date.now() - startTime) / (maxInSec * 1000)) * toScaleTo;
-
   const receiveMessage = async () => {
     const getUserId = (): number | null => {
-      const currentLimit = Math.ceil(getScaling(userData.length, 240));
-      if (alerts.length >= currentLimit) return null;
+      if (alerts.length >= getCurrentLimit(startTime ?? Date.now())) return null;
 
-      const temp = random(1, currentLimit + 1);
+      const temp = random(1, getCurrentLimit(startTime ?? Date.now()) + 1);
       return alerts.find((alert) => alert.userId === temp) == null ? temp : getUserId();
     };
+    console.log('chat-layout', getCurrentLimit(startTime ?? Date.now()));
 
     const userId = getUserId();
     if (userId == null) return;
@@ -65,35 +64,38 @@ export function ChatLayout({
     );
 
     for (const response of responses) {
-      if (!response.includes('<<end>>')) {
-        setUserData((prev) =>
-          prev.map((user) =>
-            user.id === userId
-              ? {
-                  ...user,
-                  messages: [...(user.messages ?? []), { id: user.messages?.length ?? 0, name, message: response }],
-                }
-              : user,
-          ),
-        );
-        setAlerts((prev) =>
-          prev.find((alert) => alert.userId === userId)
-            ? prev.map((alert) =>
-                alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + 1 } : alert,
-              )
-            : [
-                ...prev,
-                {
-                  userId,
-                  messagesUnread: 1,
-                  timeLimit: random(
-                    ALERT_TIME_LIMITS[0] - getScaling(ALERT_TIME_LIMITS[1], ALERT_TIME_LIMITS[4]),
-                    ALERT_TIME_LIMITS[2] - getScaling(ALERT_TIME_LIMITS[3], ALERT_TIME_LIMITS[4]),
-                  ),
-                },
-              ],
-        );
-      }
+      // if (!response.includes('<<end>>')) {
+      setUserData((prev) =>
+        prev.map((user) =>
+          user.id === userId
+            ? {
+                ...user,
+                messages: [...(user.messages ?? []), { id: user.messages?.length ?? 0, name, message: response }],
+              }
+            : user,
+        ),
+      );
+      setAlerts((prev) =>
+        prev.find((alert) => alert.userId === userId)
+          ? prev.map((alert) =>
+              alert.userId === userId ? { ...alert, messagesUnread: alert.messagesUnread + 1 } : alert,
+            )
+          : [
+              ...prev,
+              {
+                userId,
+                messagesUnread: 1,
+                timeLimit: random(
+                  ALERT_TIME_LIMITS[0] -
+                    getScaling(ALERT_TIME_LIMITS[1], ALERT_TIME_LIMITS[4], startTime ?? Date.now()),
+                  ALERT_TIME_LIMITS[2] -
+                    getScaling(ALERT_TIME_LIMITS[3], ALERT_TIME_LIMITS[4], startTime ?? Date.now()),
+                ),
+              },
+            ],
+      );
+      setIsPing(true);
+      // }
 
       // maximum here should be smaller than minimum of receive message
       await new Promise((resolve) =>
@@ -103,10 +105,10 @@ export function ChatLayout({
   };
 
   const cancelMessages = useRandomInterval(receiveMessage, TIMES_BETWEEN_MESSAGES[0], TIMES_BETWEEN_MESSAGES[2], {
-    getScaling,
-    minSubtract: TIMES_BETWEEN_MESSAGES[1],
-    maxSubtract: TIMES_BETWEEN_MESSAGES[3],
+    minSubtract: TIMES_BETWEEN_MESSAGES[1] + SCALING_WITH_NUMBER_OF_CHATS[0],
+    maxSubtract: TIMES_BETWEEN_MESSAGES[3] + SCALING_WITH_NUMBER_OF_CHATS[1],
     maxInSec: TIMES_BETWEEN_MESSAGES[4],
+    startTime: Date.now(),
   });
 
   const [isNextAutocorrect, setIsNextAutocorrect] = useState(false);
@@ -123,6 +125,7 @@ export function ChatLayout({
 
   return (
     <>
+      <ReactHowler src="ping.mp3" playing={isPing} onEnd={() => setIsPing(false)} />
       <Sidebar
         links={userData.map((user) => ({
           ...user,

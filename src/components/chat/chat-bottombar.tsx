@@ -7,6 +7,7 @@ import { Message, loggedInUserData } from '@/app/data';
 import { Textarea } from '../ui/textarea';
 import { EmojiPicker } from '../emoji-picker';
 import { random } from '@/lib/useRandomInterval';
+import { GlitchHandle } from 'react-powerglitch';
 
 interface ChatBottombarProps {
   sendMessage: (newMessage: Message) => void;
@@ -14,6 +15,7 @@ interface ChatBottombarProps {
   autoCorrection: string;
   setAutoCorrection: React.Dispatch<React.SetStateAction<string>>;
   isAutoCorrecting: boolean;
+  glitch: GlitchHandle;
 }
 
 export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
@@ -24,6 +26,7 @@ export default function ChatBottombar({
   autoCorrection,
   setAutoCorrection,
   isAutoCorrecting,
+  glitch,
 }: ChatBottombarProps) {
   const [message, setMessage] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -71,10 +74,11 @@ export default function ChatBottombar({
       if (autoCorrection) {
         for (const c of autoCorrection) {
           setMessage((prev) => prev + c);
-          await new Promise((resolve) => setTimeout(resolve, random(50, 200)));
+          await new Promise((resolve) => setTimeout(resolve, random(15, 50)));
         }
         handleSend(autoCorrection);
         setAutoCorrection('');
+        glitch.stopGlitch();
       }
     })();
   }, [autoCorrection]);
@@ -97,20 +101,22 @@ export default function ChatBottombar({
             },
           }}
         >
-          <Textarea
-            autoComplete="off"
-            value={message}
-            ref={inputRef}
-            onKeyDown={handleKeyPress}
-            onChange={handleInputChange}
-            name="message"
-            placeholder="Aa"
-            className=" w-full border rounded-full flex items-center h-10 resize-none overflow-hidden bg-background"
-            disabled={gameOver || isAutoCorrecting || !!autoCorrection}
-            autoFocus
-            onBlur={() => inputRef.current && inputRef.current.focus()}
-          />
-          <div className="absolute right-2 bottom-1.5  ">
+          <div ref={glitch.ref}>
+            <Textarea
+              autoComplete="off"
+              value={message}
+              ref={inputRef}
+              onKeyDown={handleKeyPress}
+              onChange={handleInputChange}
+              name="message"
+              placeholder="Aa"
+              className=" w-full border rounded-full flex items-center h-10 resize-none overflow-hidden bg-background"
+              disabled={gameOver || isAutoCorrecting || !!autoCorrection}
+              autoFocus
+              onBlur={() => inputRef.current && inputRef.current.focus()}
+            />
+          </div>
+          <div className="absolute right-2 bottom-1.5">
             <EmojiPicker
               onChange={(value) => {
                 setMessage(message + value);

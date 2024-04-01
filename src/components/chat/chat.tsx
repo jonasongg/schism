@@ -4,6 +4,7 @@ import { ChatList } from './chat-list';
 import React, { useEffect, useState } from 'react';
 import { Alert } from '@/App';
 import { askChatGpt } from '@/lib/gpt';
+import { useGlitch } from 'react-powerglitch';
 
 interface ChatProps {
   userData: UserData[];
@@ -37,11 +38,25 @@ export function Chat({
   const [autoCorrection, setAutoCorrection] = useState('');
   const [isAutoCorrecting, setIsAutoCorrecting] = useState(false);
 
+  const glitch = useGlitch({
+    playMode: 'manual',
+    glitchTimeSpan: false,
+    shake: {
+      amplitudeX: 0.01,
+      amplitudeY: 0.1,
+    },
+    slice: {
+      maxHeight: 0.02,
+      minHeight: 0.05,
+    },
+  });
+
   useEffect(() => {
     const controller = new AbortController();
     (async () => {
       if (isNextAutocorrect && selectedUserId != null) {
         setIsAutoCorrecting(true);
+        glitch.startGlitch();
         const { messages, name } = userData.find((user) => user.id === selectedUserId) ?? {};
         const response = (
           await askChatGpt(
@@ -72,6 +87,7 @@ export function Chat({
         autoCorrection={autoCorrection}
         setAutoCorrection={setAutoCorrection}
         isAutoCorrecting={isAutoCorrecting}
+        glitch={glitch}
       />
     </div>
   );

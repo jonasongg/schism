@@ -58,7 +58,7 @@ export function Sidebar({
                   link.variant === 'ghost' && 'hover:bg-gray-500/5',
                   link.variant === 'secondary' &&
                     'bg-gray-500/10 hover:bg-gray-400/10 dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white shrink',
-                  'relative justify-start gap-4 px-3.5',
+                  'relative justify-start px-3.5',
                 )}
                 // initial={{ width: '40px' }}
                 // animate={{ width: '100%', transition: { duration: 0.3, ease: easeIn } }}
@@ -103,7 +103,7 @@ export function Sidebar({
                   />
                 )}
 
-                <Avatar className="flex justify-center items-center overflow-visible">
+                <Avatar className="flex justify-center items-center overflow-visible mr-4">
                   {!!alert?.messagesUnread && (
                     // Badge
                     <span

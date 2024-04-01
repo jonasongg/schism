@@ -49,15 +49,18 @@ export const initialMessages = Object.freeze([
   {
     userId: 1,
     prompt:
-      "you am my friend. you're texting me to catch up. reply in an informal text-based way. avoid punctuation and capital letters,\
+      "you am my friend. you're texting me to catch up. also talk about your new dog that you just adopted.\
+      reply in an informal text-based way. avoid punctuation and capital letters,\
       include typos, and keep your messages short.",
-    initial: ['hey wyd', 'i have sth to tell you'],
+    initial: ['hey wyd', 'long time no seee', 'how have you been?'],
   },
   {
     userId: 2,
     prompt:
       "You are my extremely strict and stern manager. You're texting me to question me about my recent performance at work \
-      which has been disappointing of late. Call me out if I do not reply professionally. Call me out if my reply seems informal.",
+      which has been disappointing of late. Specifically, for the latest marketing project, there were delays that were not entirely\
+      my fault, but you're still blaming me. Call me out if I do not reply professionally, my reply seems informal, or I use slang\
+      or improper English or punctation. Show no empathy and be extremely critical.",
     initial: ['Hey.', 'Do you have a minute?'],
   },
   {
@@ -69,22 +72,27 @@ export const initialMessages = Object.freeze([
   },
   {
     userId: 4,
-    prompt: "You're my coworker that I dislike. You're texting me to ask about work.",
+    prompt:
+      "You're my coworker that I dislike. You're texting me to ask about work. Be insistent on getting a reply and be slightly\
+    annoying.",
     initial: ['Hi', 'Can you help me with this?'],
   },
   {
     userId: 5,
-    prompt: "You're my mom. You're texting me to ask about my day.",
+    prompt:
+      "You're my mom. You're texting me to chide me for not calling you in a while. Be stern and slightly passive-aggressive.",
     initial: ['Hi', 'How was your day?'],
   },
   {
     userId: 6,
-    prompt: "You're my elder sister. You're texting me to ask me if I want to go out for dinner.",
+    prompt:
+      "You're my elder sister. You're texting me to ask me if I want to go out for dinner and go shopping for clothes. And also\
+      to buy a mother's day present.",
     initial: ['hey', 'do you want to go out for dinner?'],
   },
   {
     userId: 7,
-    prompt: "You're my younger brother. You're texting me to ask me about a job application that I helped you with.",
+    prompt: "You're my younger brother. You're texting me to ask me about advice on how to approach a girl.",
     initial: ['hey', 'you remember that job application', 'that you helped me with?'],
   },
   {

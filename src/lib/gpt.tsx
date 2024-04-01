@@ -8,12 +8,11 @@ const prompt =
   The following messages will be labelled as 'assistant' or 'user' to indicate who is speaking. You are 'assistant', and I am 'user'.\
   If my response seems nonsensical or inappropriate--for example, if my reply doesn't make sense for the context of who you are\
   and the conversation--do not simply ignore it. Instead, question me about it.\
-  If the conversation seems to end abruptly, ask me a question to keep it going.\
-  If the conversation seems to end naturally, you can end it by sending this exact string of text: '<<end>>";
+  If the conversation seems to end abruptly, ask me a question to keep it going.";
 
 const autoCorrectPrompt =
   "The following messages will be labelled as 'assistant' or 'user' to indicate who is speaking. \
-  Send a message to continue the conversation as the 'user'.";
+  Send a message to continue the conversation as the 'user'. Keep the message short.";
 
 export const askChatGpt = async (
   userId: number,
@@ -32,15 +31,13 @@ export const askChatGpt = async (
   const completion = await openai.chat.completions.create(
     {
       model: 'gpt-3.5-turbo',
-      messages: [
-        { role: 'system', content: autoComplete ? autoCorrectPrompt : prompt },
-        ...(initialMessage != null ? [{ role: 'system', content: initialMessage?.prompt } as const] : []),
-        // ...(initialMessage?.initial.map<ChatCompletionAssistantMessageParam>((message) => ({
-        //   role: 'assistant',
-        //   content: message,
-        // })) ?? []),
-        ...messageHistory,
-      ],
+      messages: autoComplete
+        ? [{ role: 'system', content: autoCorrectPrompt }, ...messageHistory]
+        : [
+            { role: 'system', content: prompt },
+            ...(initialMessage != null ? [{ role: 'system', content: initialMessage?.prompt } as const] : []),
+            ...messageHistory,
+          ],
     },
     { signal },
   );

@@ -21,6 +21,7 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@types/react-howler": "^5.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "embla-carousel-react": "^8.0.0",
@@ -30,6 +31,7 @@
     "openai": "^4.29.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-howler": "^5.2.0",
     "react-powerglitch": "^1.0.3",
     "react-resizable-panels": "^2.0.13",
     "tailwind-merge": "^2.2.2"
