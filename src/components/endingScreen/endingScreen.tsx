@@ -36,12 +36,14 @@ const EndingScreen = ({ setGameStatus }: EndingScreenProps) => {
             </CardTitle>
             <CardContent>
               <p className="text-lg text-center">
-                <strong>You've lost.</strong> You've failed to keep up with the demands of your digital life, and now
-                you're left stranded in a sea of unanswered messages.
+                <strong>You've lost.</strong>
                 <br /> <br />
-                Seems like an exaggeration? Maybe. But the truth is, this game is a reflection of the digital reality in
-                which so many find themselves deeply entrenched, one which is perpetually accelerating, voraciously
-                demanding its users' attention at every turn.
+                In being so overexposed to the world and grotesquely entwined with all your social circles, you find
+                your self fragmented and lost in schism.
+                <br /> <br />
+                Seems like an exaggeration? Maybe. But the truth is, this game is a reflection of your digital reality
+                in which you've been so unknowlingly entrenched, one which is perpetually accelerating, voraciously
+                demanding your attention at every turn.
               </p>
             </CardContent>
           </Card>
@@ -50,12 +52,11 @@ const EndingScreen = ({ setGameStatus }: EndingScreenProps) => {
           <Card className="h-full p-16 flex items-center">
             <p className="text-lg text-center">
               And it's a world <span className="line-through">you're</span> we're all addicted to. The constant pings,
-              the endless scrolling, the never-ending notifications—it's all designed to keep us hooked. But at what
-              cost?
+              the endless scrolling, the never-ending stream of notifications—it's all designed to keep us hooked. But
+              at what cost?
               <br /> <br />
-              With each message sent and received, every chat opened and closed, with every notification in a ceaseless
-              stream we frantically manouevre around, with every persona we adopt and discard, the possibility of a
-              coherent self becomes ever more elusive, and the specter of schism looms ominously.
+              With each message sent and received, every chat opened and closed, every persona we adopt and discard, the
+              possibility of a coherent self becomes ever more elusive, and the specter of schism looms ominously.
               <br /> <br />
               We've become merely nodes in a vast, apathetic network, our identities fragmented and dispersed across the
               digital ether. Entering a chat, do we truly control the words we type? Or are we merely marionettes
@@ -70,8 +71,8 @@ const EndingScreen = ({ setGameStatus }: EndingScreenProps) => {
             <p className="text-lg text-center">
               After this game, you'll probably close the tab and hop back onto Telegram or whatever messaging service
               you use. They are, after all, indispensable tools for communication, right? But just before you do, take a
-              moment to review the way you've played this game. What did you say? What did you reveal about yourself to
-              your Friend? What did you hide from your Manager?
+              moment to review the way you've played this game. What did you say? What did you reveal about yourself,
+              and what did you hide?
               <br /> <br />
               Is this really just a game?
             </p>
