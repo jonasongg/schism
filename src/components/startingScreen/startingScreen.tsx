@@ -92,7 +92,7 @@ const StartingScreen = ({ setGameStatus, instructions, setInstructions }: Starti
         </CarouselItem>
         <CarouselItem>
           <Card className="h-full flex items-center justify-center flex-col">
-            <motion.div animate={controls} className="absolute w-full flex items-center flex-col gap-6">
+            <motion.div animate={controls} className="absolute w-full flex items-center flex-col gap-6 p-16">
               <p className="text-lg text-center">
                 Please do not refresh the page during gameplay. Doing so will restart the game.
                 <br /> <br />
